@@ -1,0 +1,31 @@
+# Contiki-NG build output
+build/
+*.ihex
+*.sky
+*.z1
+*.native
+*.elf
+*.hex
+*.bin
+*.map
+*.o
+*.a
+*.d
+obj_*/
+contiki-*.a
+Makefile.target
+
+# Unsorted serial dumps (move the ones you keep into results/)
+serialdump-*
+
+# Editors / OS
+.vscode/
+*.swp
+*~
+.DS_Store
+Thumbs.db
+
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/

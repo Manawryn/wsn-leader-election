@@ -1,0 +1,9 @@
+# Always store and check out text files with Linux (LF) line endings,
+# because we build inside a Linux VM.
+* text=auto eol=lf
+
+# Binary files
+*.pdf binary
+*.png binary
+*.jpg binary
+*.ihex binary
