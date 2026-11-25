@@ -11,8 +11,12 @@ SD=../../tools/serial-io/serialdump
 ports=$(ls /dev/ttyUSB* 2>/dev/null)
 [ -n "$ports" ] || { echo "no /dev/ttyUSB* found (motes connected to the VM?)"; exit 1; }
 for p in $ports; do
-  "$SD" -b115200 "$p" > "$dir/$(basename "$p").log" 2>/dev/null &
+  # serialdump quits when its input ends, and a background job's input is
+  # empty: feed it an input that never ends. Its error messages (e.g. a USB
+  # disconnect) go into the log too.
+  sleep infinity | "$SD" -b115200 "$p" > "$dir/$(basename "$p").log" 2>&1 &
   echo "logging $p -> $dir/$(basename "$p").log"
 done
-trap 'kill $(jobs -p) 2>/dev/null; echo; echo "analyse with: python3 scripts/analyze.py $dir/*.log"' INT
+# background jobs ignore Ctrl+C in a script, so stop them explicitly
+trap 'echo; echo "analyse with: python3 scripts/analyze.py $dir/*.log"; kill 0' INT
 wait

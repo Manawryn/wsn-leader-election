@@ -64,6 +64,24 @@
 #define LE_TX_POWER_DBM         0
 #endif
 
+/* Clear-channel assessment threshold in dBm: the radio only transmits when
+ * the channel is quieter than this. Contiki's CC2420 default is -90 dBm
+ * (CC2420_CONF_CCA_THRESH -45 is a register value, plus the RSSI offset of
+ * -45 dB). That is below the background noise in many rooms (our dorm scan:
+ * -78 to -87 dBm), so the radio thinks the channel is always busy and hardly
+ * ever sends. -75 dBm is the 802.15.4 energy-detection level. */
+#ifndef LE_CCA_THRESH_DBM
+#define LE_CCA_THRESH_DBM       (-75)
+#endif
+/* 1: check the channel (CCA) before every frame, as plain CSMA does.
+ * 0: only before JOIN, the one frame sent in a shared contention slot. All
+ * other frames have their own TDMA slot, so a busy channel can only be
+ * noise, and waiting for it to clear just drops the frame. On our motes one
+ * of them found the channel busy for ~1/3 of its frames even at -75 dBm. */
+#ifndef LE_SLOT_CCA
+#define LE_SLOT_CCA             0
+#endif
+
 /*===========================================================================*/
 /* Frame timing (beacon-synchronised TDMA)                                   */
 /*===========================================================================*/
@@ -90,6 +108,24 @@
 #ifndef LE_BEACON_WAIT_MS
 #define LE_BEACON_WAIT_MS       120
 #endif
+/* Time diversity against burst interference (Lecture 10A/10B: errors come
+ * in bursts, e.g. Wi-Fi frames): the leader sends every beacon
+ * LE_BEACON_COPIES times, LE_BEACON_GAP_MS apart. Each copy carries its
+ * number, so a member that hears only a later copy still knows when the
+ * round started. 1 = a single beacon per round. All copies must be sent
+ * before slot 0. */
+#ifndef LE_BEACON_COPIES
+#define LE_BEACON_COPIES        2
+#endif
+#ifndef LE_BEACON_GAP_MS
+#define LE_BEACON_GAP_MS        15
+#endif
+/* The same for the RESULT of an election: if the winner misses it, the
+ * handover fails and the election is repeated in the next round. Copies
+ * are LE_BEACON_GAP_MS apart and must fit in LE_RX_WINDOW_MS. */
+#ifndef LE_RESULT_COPIES
+#define LE_RESULT_COPIES        2
+#endif
 /* How long members listen after an expected ackmap/result. */
 #ifndef LE_RX_WINDOW_MS
 #define LE_RX_WINDOW_MS         60
@@ -100,9 +136,11 @@
 #endif
 /* Readings kept by a member until the leader confirms them (link-layer ACK
  * or ackmap bit). Readings sampled while there is no leader are delivered
- * once a leader is back. */
+ * once a leader is back. The worst outage seen on the motes: the leader
+ * prunes a silent member after LE_MAX_MISSED_REPORTS (3) rounds, then the
+ * member takes over after K (3) more, so 6. */
 #ifndef LE_BACKLOG
-#define LE_BACKLOG              3
+#define LE_BACKLOG              6
 #endif
 /* 1: a member that got a link-layer ACK for its DATA does not wake up for
  * the ackmap (it already knows the leader has it). */
@@ -122,13 +160,15 @@
 #define LE_BOOT_WAIT_MS         (LE_PERIOD_MS + 1000)
 #endif
 /* Failure-detection timeout: the leader is declared failed after K
- * consecutive missed beacons. */
+ * consecutive rounds in which a member heard nothing from it: no beacon
+ * copy and no ackmap (passive estimation by overhearing, Lecture 10B).
+ * K = 2 gave false failovers on real motes with Wi-Fi nearby. */
 #ifndef LE_FAILURE_TIMEOUT_K
-#define LE_FAILURE_TIMEOUT_K    2
+#define LE_FAILURE_TIMEOUT_K    3
 #endif
 /* Length of the succession (backup) list that the leader keeps up to date
  * and puts in every beacon. Backup j takes over after
- * K + j * LE_BACKUP_STAGGER missed beacons. */
+ * K + j * LE_BACKUP_STAGGER silent rounds (nothing heard from the leader). */
 #ifndef LE_SUCC_LEN
 #define LE_SUCC_LEN             3
 #endif

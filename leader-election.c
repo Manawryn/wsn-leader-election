@@ -6,17 +6,21 @@
  * offsets relative to the end of the beacon (t0):
  *
  *   t0          beacon (DATA or ELECT round, slot table, backups)
+ *   +c*GAP      beacon copy c (LE_BEACON_COPIES, against burst interference)
  *   +FIRST+i*SLOT   slot i: member slot[i] sends DATA (unicast, link ACK)
  *                   or, in an ELECT round, REPORT (broadcast, overheard)
  *   +FIRST+n*SLOT   contention slot: JOIN from nodes without a slot
  *   +B          ackmap: bitmap of what the leader received       (tb)
- *   tb+FIRST+i*SLOT retry slot i, only for members whose bit is 0
+ *   tb+FIRST+i*SLOT retry slot i, only for members whose bit is 0 (the
+ *                   ackmap is a NACK list; a member that missed the beacon
+ *                   but heard the ackmap retries too)
  *   tb+R        ELECT rounds only: RESULT (new leader, term, backups)
  *   ...         everybody sleeps (radio off) until t0 + PERIOD - GUARD
  *
  * Election: LEACH-C, computed by the leader from the REPORTs (energy +
  * link table) - see le-election.c.
- * Failure: members count missed beacons; after K misses backup 0 from the
+ * Failure: members count rounds with nothing from the leader (no beacon
+ * copy, no ackmap); after K such rounds backup 0 from the
  * succession list in the last beacon takes over, backup j after K + j.
  * Conflicts (two leaders): higher term wins, then lower index.
  */
@@ -52,6 +56,8 @@
 /*===========================================================================*/
 static const uint16_t node_ids[] = LE_NODE_IDS;
 static const uint8_t node_cluster[] = LE_NODE_CLUSTERS;
+/* cluster of node i; nodes beyond the end of LE_NODE_CLUSTERS are in cluster 0 */
+#define CLUSTER_OF(i) ((i) < sizeof(node_cluster) ? node_cluster[i] : 0)
 #define N_NODES ((uint8_t)(sizeof(node_ids) / sizeof(node_ids[0])))
 
 #define BIT(i)  ((uint16_t)1 << (i))
@@ -120,7 +126,7 @@ static struct {
   clock_time_t t0;              /* end of this round's beacon (or predicted) */
   clock_time_t tb;              /* end of this round's ackmap (or predicted) */
   clock_time_t last_beacon;     /* last beacon actually received */
-  uint8_t missed;               /* consecutive missed beacons */
+  uint8_t missed;               /* consecutive rounds with nothing from the leader */
   uint8_t fail_detected;
   uint8_t succ[LE_SUCC_LEN], n_succ;
 
@@ -129,6 +135,7 @@ static struct {
   uint8_t n_last;               /* slots in the last beacon actually received */
   uint16_t expected;            /* bitmap of slot owners */
   uint8_t acked;                /* my packet of this round is confirmed */
+  uint8_t got_beacon;           /* a copy of this round's beacon was accepted */
 
   /* member side */
   uint8_t pending_leader;       /* RESULT named me: lead from next round */
@@ -170,7 +177,19 @@ static struct {
 static linkaddr_t node_addr[LE_MAX_NODES];   /* learned from received frames */
 static struct ctimer seq_timer;              /* frame sequencer */
 static struct ctimer fail_timer;
+static struct ctimer copy_timer;             /* beacon / RESULT copies 1.. */
+static le_beacon_t beacon_msg;               /* this round's beacon (copy 0) */
+static le_result_t result_msg;               /* this round's RESULT */
+static uint8_t result_copies_sent;
+static uint16_t result_rx_round = 0xffff;    /* member: RESULT already handled */
 static uint8_t txbuf[sizeof(le_report_t) + 8];
+
+#if LE_BEACON_COPIES < 1 || (LE_BEACON_COPIES - 1) * LE_BEACON_GAP_MS + 10 > LE_FIRST_SLOT_MS
+#error "beacon copies must be sent before slot 0 (LE_BEACON_COPIES, LE_BEACON_GAP_MS)"
+#endif
+#if LE_RESULT_COPIES < 1 || (LE_RESULT_COPIES - 1) * LE_BEACON_GAP_MS + 10 > LE_RX_WINDOW_MS
+#error "RESULT copies must fit in the members' RESULT window (LE_RESULT_COPIES, LE_RX_WINDOW_MS)"
+#endif
 
 PROCESS(le_process, "Leader election");
 AUTOSTART_PROCESSES(&le_process);
@@ -180,6 +199,12 @@ static void m_round_end(void *ptr);
 static void l_send_beacon(void);
 static void l_round_end(void *ptr);
 static void enter_listen(uint32_t wait_ms);
+/* Random extra listening time (0..2 periods, 10 ms steps) for every restart
+ * of the listening phase except the first one at boot. Otherwise two nodes
+ * that started their own networks at the same moment repeat the same cycle
+ * (lead 3 rounds, give up, listen) in step forever and never hear each
+ * other. */
+#define LISTEN_JITTER_MS() ((uint32_t)(random_rand() % (2 * (LE_PERIOD_MS / 10))) * 10)
 static void fail_start(uint16_t seconds);
 static void accept_beacon(const le_beacon_t *b);
 
@@ -204,12 +229,20 @@ radio_off(void)
   NETSTACK_RADIO.off();
 }
 
+/* The TelosB's blue LED is called YELLOW in Contiki's (legacy) LED API;
+ * LEDS_BLUE does not exist there and would light nothing. */
+#ifdef LEDS_CONF_BLUE
+#define LED_LEADER LEDS_BLUE
+#else
+#define LED_LEADER LEDS_YELLOW
+#endif
+
 static void
 set_leds(void)
 {
   leds_off(LEDS_ALL);
   switch(s.state) {
-  case ST_LEADER: leds_on(LEDS_BLUE); break;
+  case ST_LEADER: leds_on(LED_LEADER); break;
   case ST_MEMBER: leds_on(LEDS_GREEN); break;
   case ST_FAILED: case ST_DEAD: leds_on(LEDS_RED); break;
   default: break;
@@ -297,6 +330,9 @@ static void
 mac_sent(void *ptr, int status, int num_tx)
 {
   le_stats.mac_tx += num_tx;
+  if(status == MAC_TX_COLLISION) {
+    le_stats.mac_coll++;   /* radio found the channel busy and gave up */
+  }
   if(s.state == ST_FAILED || s.state == ST_DEAD || s.state != s.tx_state) {
     return;   /* crashed or changed role while the frame was queued */
   }
@@ -319,6 +355,11 @@ send_msg(uint16_t len, uint8_t dest, uint8_t attempts, tx_done_t done)
   }
   packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &linkaddr_node_addr);
   packetbuf_set_attr(PACKETBUF_ATTR_MAX_MAC_TRANSMISSIONS, attempts);
+  /* Clear-channel check only where nodes contend (JOIN), unless
+   * LE_SLOT_CCA: every other frame owns its TDMA slot. */
+  NETSTACK_RADIO.set_value(RADIO_PARAM_TX_MODE,
+                           (LE_SLOT_CCA || h->type == LE_MSG_JOIN) ?
+                           RADIO_TX_MODE_SEND_ON_CCA : 0);
   le_stats_tx(h->type, len);
   le_energy_use(LE_E_TX);
   s.tx_state = s.state;
@@ -403,12 +444,16 @@ print_events(void)
       printf("MISS n=%u\n", e->d);
       break;
     case EV_ALIVE:
-      printf("ALIVE leader=%u missed_beacon=%u\n", e->a, e->d);
+      printf("ALIVE leader=%u missed_beacon=%u retry=%u\n", e->a, e->d, e->b);
       break;
     }
   }
   s.n_ev = 0;
 }
+
+/* diagnostic: background noise just before the beacon is due (channel idle),
+ * min/max since the last STAT line */
+static int8_t noise_min = 127, noise_max = -128;
 
 static void
 print_stat(void)
@@ -418,7 +463,7 @@ print_stat(void)
   }
   LOG_PREFIX();
   printf("STAT r=%u role=%s e=%u tx=%u,%u,%u,%u,%u,%u txB=%lu,%lu,%lu,%lu,%lu,%lu "
-         "rx=%u,%u,%u,%u,%u,%u mac=%lu radio_ms=%lu txon_ms=%lu drop=%u nbr=%u stack=%ld\n",
+         "rx=%u,%u,%u,%u,%u,%u mac=%lu coll=%u radio_ms=%lu txon_ms=%lu drop=%u nbr=%u stack=%ld noise=%d,%d\n",
          s.round, state_name[s.state], le_energy(),
          le_stats.tx[1], le_stats.tx[2], le_stats.tx[3],
          le_stats.tx[4], le_stats.tx[5], le_stats.tx[6],
@@ -427,10 +472,13 @@ print_stat(void)
          (unsigned long)le_stats.tx_bytes[5], (unsigned long)le_stats.tx_bytes[6],
          le_stats.rx[1], le_stats.rx[2], le_stats.rx[3],
          le_stats.rx[4], le_stats.rx[5], le_stats.rx[6],
-         (unsigned long)le_stats.mac_tx,
+         (unsigned long)le_stats.mac_tx, le_stats.mac_coll,
          (unsigned long)(le_radio_listen_ms() + le_radio_tx_ms()),
          (unsigned long)le_radio_tx_ms(), s.dropped, le_link_neighbors(),
-         le_stack_peak());
+         le_stack_peak(),
+         noise_min == 127 ? 0 : noise_min, noise_max == -128 ? 0 : noise_max);
+  noise_min = 127;
+  noise_max = -128;
 }
 
 static void
@@ -707,10 +755,49 @@ m_beacon_timeout(void *ptr)
   if(s.missed > LE_FAILURE_TIMEOUT_K + LE_SUCC_LEN * LE_BACKUP_STAGGER + 1) {
     /* nobody took over: start from scratch */
     print_events();
-    enter_listen((uint32_t)LE_BOOT_WAIT_MS * (1 + s.cluster_rank));
+    enter_listen((uint32_t)LE_BOOT_WAIT_MS * (1 + s.cluster_rank) + LISTEN_JITTER_MS());
     return;
   }
   m_round_end(NULL);
+}
+
+/* No copy of the beacon arrived. Before counting the round as missed, listen
+ * for the leader's ackmap: hearing it proves the leader is alive, and its
+ * NACK bits give this member a retry slot (see the ACKMAP handler). The
+ * window covers one slot more or less than in the last beacon received,
+ * since a join or prune changes when the ackmap is sent. */
+static void
+m_lost_wait_ack(void *ptr)
+{
+  radio_on();
+  at(s.t0 + MS2T(LE_PERIOD_MS + ACK_OFF(s.n_last) + LE_RX_WINDOW_MS),
+     m_beacon_timeout);
+}
+
+static void
+m_beacon_lost(void *ptr)
+{
+  uint32_t from = ACK_OFF(s.n_last) - LE_GUARD_MS - (s.n_last ? LE_SLOT_MS : 0);
+  clock_time_t w = s.t0 + MS2T(LE_PERIOD_MS + from);
+  if(until(w) > 2) {
+    radio_off();
+    at(w, m_lost_wait_ack);
+  } else {
+    m_lost_wait_ack(NULL);
+  }
+}
+
+static void
+sample_noise(void)
+{
+  uint8_t i;
+  radio_value_t v;
+  for(i = 0; i < 8; i++) {
+    if(NETSTACK_RADIO.get_value(RADIO_PARAM_RSSI, &v) == RADIO_RESULT_OK && v != 0) {
+      if(v < noise_min) noise_min = v;
+      if(v > noise_max) noise_max = v;
+    }
+  }
 }
 
 static void
@@ -718,7 +805,9 @@ m_wake_beacon(void *ptr)
 {
   int8_t rank = succ_rank(s.me);
   radio_on();
+  sample_noise();
   s.acked = 0;
+  s.got_beacon = 0;
   if(s.handover_wait) {
     at(s.t0 + MS2T(LE_PERIOD_MS + LE_HANDOVER_WAIT_MS), m_handover_fallback);
   } else if(rank >= 0 &&
@@ -731,7 +820,7 @@ m_wake_beacon(void *ptr)
      * (or the leader's ackmap, which proves it is alive) */
     at(s.t0 + MS2T(LE_PERIOD_MS + SUSPECT_END(s.n_last)), m_beacon_timeout);
   } else {
-    at(s.t0 + MS2T(LE_PERIOD_MS + LE_BEACON_WAIT_MS), m_beacon_timeout);
+    at(s.t0 + MS2T(LE_PERIOD_MS + LE_BEACON_WAIT_MS), m_beacon_lost);
   }
 }
 
@@ -777,10 +866,30 @@ m_round_end(void *ptr)
 /*===========================================================================*/
 static void l_result(void *ptr);
 
+static void l_result_sent(int status);
+
+/* copy c (1..) of the RESULT, LE_BEACON_GAP_MS after the previous one */
+static void
+l_result_copy(void *ptr)
+{
+  if(s.state != ST_LEADER) {
+    return;   /* failed or stepped down meanwhile */
+  }
+  memcpy(txbuf, &result_msg, sizeof(result_msg));
+  send_msg(sizeof(result_msg), LE_NONE, 1, l_result_sent);
+}
+
 static void
 l_result_sent(int status)
 {
-  s.elect_dur_ms = T2MS(clock_time() - s.elect_start);
+  if(result_copies_sent++ == 0) {
+    s.elect_dur_ms = T2MS(clock_time() - s.elect_start);
+  }
+  if(result_copies_sent < LE_RESULT_COPIES) {
+    /* time diversity, as for the beacon: the round ends after the last copy */
+    ctimer_set(&copy_timer, MS2T(LE_BEACON_GAP_MS), l_result_copy, NULL);
+    return;
+  }
   radio_off();
   if(s.result_winner != s.me) {
     /* hand over: become a member that waits for the new leader's beacon */
@@ -836,6 +945,8 @@ l_result(void *ptr)
   m->n_succ = s.n_succ;
   memcpy(m->succ, s.succ, sizeof(m->succ));
   s.elect_logged = 1;
+  memcpy(&result_msg, m, sizeof(result_msg));
+  result_copies_sent = 0;
   radio_on();
   send_msg(sizeof(*m), LE_NONE, 1, l_result_sent);
 }
@@ -874,13 +985,35 @@ l_ackmap(void *ptr)
   hdr(&m->h, LE_MSG_ACKMAP);
   m->received = s.rx_map;
   m->expected = s.expected;
+  m->flags = s.elect ? LE_BF_ELECT : 0;
   send_msg(sizeof(*m), LE_NONE, 1, l_ackmap_sent);
+}
+
+/* copy c (1..) of this round's beacon, c * LE_BEACON_GAP_MS after copy 0 */
+static void
+l_beacon_copy(void *ptr)
+{
+  uint8_t c = (uint8_t)(uintptr_t)ptr;
+  if(s.state != ST_LEADER || beacon_msg.h.round != s.round ||
+     beacon_msg.h.term != s.term) {
+    return;   /* stepped down, failed or handed over meanwhile */
+  }
+  memcpy(txbuf, &beacon_msg, sizeof(beacon_msg));
+  ((le_beacon_t *)txbuf)->copy = c;
+  send_msg(sizeof(le_beacon_t), LE_NONE, 1, NULL);
+  if(c + 1 < LE_BEACON_COPIES) {
+    ctimer_set(&copy_timer, until(s.t0 + MS2T((uint32_t)(c + 1) * LE_BEACON_GAP_MS)),
+               l_beacon_copy, (void *)(uintptr_t)(c + 1));
+  }
 }
 
 static void
 l_beacon_sent(int status)
 {
   s.t0 = clock_time();
+  if(LE_BEACON_COPIES > 1) {
+    ctimer_set(&copy_timer, MS2T(LE_BEACON_GAP_MS), l_beacon_copy, (void *)1);
+  }
   at(s.t0 + MS2T(ACK_OFF(s.n_slots)), l_ackmap);
 }
 
@@ -917,6 +1050,7 @@ l_send_beacon(void)
 
   hdr(&b->h, LE_MSG_BEACON);
   b->flags = s.elect ? LE_BF_ELECT : 0;
+  b->copy = 0;
   b->reason = s.reason;
   b->energy = le_energy();
   b->n_slots = s.n_slots;
@@ -924,6 +1058,8 @@ l_send_beacon(void)
   memset(b->slot, LE_NONE, sizeof(b->slot));
   memcpy(b->slot, s.slot, s.n_slots);
   memcpy(b->succ, s.succ, sizeof(b->succ));
+  memcpy(&beacon_msg, b, sizeof(beacon_msg));
+  ctimer_stop(&copy_timer);
   send_msg(sizeof(*b), LE_NONE, 1, l_beacon_sent);
 }
 
@@ -955,7 +1091,10 @@ l_update_succession(void)
   uint8_t i;
   uint16_t alive = BIT(s.me);
   for(i = 0; i < N_NODES; i++) {
-    if((s.active & BIT(i)) && s.miss_cnt[i] == 0) {
+    /* every member still in the slot table is a backup candidate: one lost
+     * packet must not empty the list, or nobody may take over when the
+     * link to the leader breaks down */
+    if(s.active & BIT(i)) {
       alive |= BIT(i);
     }
   }
@@ -1047,7 +1186,7 @@ l_round_end(void *ptr)
      * frames do not overlap with ours. Listen continuously to find it. */
     LOG_PREFIX();
     printf("ORPHAN r=%u\n", s.round);
-    enter_listen((uint32_t)LE_BOOT_WAIT_MS * (1 + s.cluster_size));
+    enter_listen((uint32_t)LE_BOOT_WAIT_MS * (1 + s.cluster_size) + LISTEN_JITTER_MS());
     return;
   }
 
@@ -1097,7 +1236,9 @@ beacon_is_better(const le_hdr_t *h, uint16_t term, uint8_t leader)
 static void
 accept_beacon(const le_beacon_t *b)
 {
-  clock_time_t now = clock_time();
+  /* round start = when copy 0 was (or would have been) received */
+  clock_time_t now = clock_time() -
+    MS2T((uint32_t)(b->copy < LE_BEACON_COPIES ? b->copy : 0) * LE_BEACON_GAP_MS);
   uint8_t i;
   uint8_t prev = s.leader;
 
@@ -1131,6 +1272,8 @@ accept_beacon(const le_beacon_t *b)
   s.missed = 0;
   s.fail_detected = 0;
   s.acked = 0;
+  s.got_beacon = 1;
+  result_rx_round = 0xffff;
   le_prr_update(&s.beacon_prr, 1);
 
   s.elect = (b->flags & LE_BF_ELECT) != 0;
@@ -1168,6 +1311,10 @@ rx_beacon(const le_hdr_t *h, const void *data, uint16_t len)
   case ST_MEMBER:
     if(s.pending_leader && h->term < s.pending_term) {
       break;  /* I am about to lead with a newer term */
+    }
+    if(s.got_beacon && h->src == s.leader && h->term == s.term &&
+       h->round == s.round) {
+      break;  /* another copy of the beacon I already have */
     }
     if(s.handover_wait ? h->term > s.term
                        : beacon_is_better(h, s.term, s.leader)) {
@@ -1207,7 +1354,7 @@ input_cb(const void *data, uint16_t len, const linkaddr_t *src, const linkaddr_t
   }
   memcpy(&h, data, sizeof(h));
   if(h.magic != LE_MAGIC || h.src >= N_NODES || h.src == s.me ||
-     h.cluster != s.cluster || node_cluster[h.src] != s.cluster ||
+     h.cluster != s.cluster || CLUSTER_OF(h.src) != s.cluster ||
      h.type == 0 || h.type >= LE_MSG_NUM) {
     return;
   }
@@ -1262,25 +1409,43 @@ input_cb(const void *data, uint16_t len, const linkaddr_t *src, const linkaddr_t
   case LE_MSG_ACKMAP:
     if(s.state == ST_MEMBER && !s.handover_wait && h.src == s.leader &&
        h.term == s.term && h.round == (uint16_t)(s.round + 1)) {
-      /* we missed this round's beacon, but the leader is alive: resync on
-       * its ackmap and skip this round (the reading stays in the backlog) */
+      /* We missed every copy of this round's beacon, but the leader is
+       * alive. The ackmap is a NACK list (expected & ~received): if it
+       * names me, send in my retry slot (selective repeat, Lecture 10B),
+       * else just resync. Slots go in increasing node index, so the slot
+       * table follows from the expected bitmap. */
       le_ackmap_t m;
-      uint8_t i, n = 0;
+      uint8_t i, n = 0, mine = LE_NONE, retry;
+      memset(&m, 0, sizeof(m));
       memcpy(&m, data, len < sizeof(m) ? len : sizeof(m));
-      for(i = 0; i < N_NODES; i++) {
-        n += (m.expected & BIT(i)) != 0;
+      for(i = 0; i < N_NODES && n < LE_MAX_NODES; i++) {
+        if(m.expected & BIT(i)) {
+          if(i == s.me) {
+            mine = n;
+          }
+          s.slot[n++] = i;
+        }
       }
+      retry = mine != LE_NONE && !(m.received & BIT(s.me));
       ctimer_stop(&seq_timer);
       le_prr_update(&s.beacon_prr, 0);
-      ev_push(EV_ALIVE, h.src, 0, h.term, s.missed + 1, 0);
+      ev_push(EV_ALIVE, h.src, retry, h.term, s.missed + 1, 0);
       s.round = h.round;
-      s.t0 = clock_time() - MS2T(ACK_OFF(n));
-      s.n_slots = 0;
-      s.elect = 0;
-      s.my_slot = LE_NONE;
+      s.tb = clock_time();
+      s.t0 = s.tb - MS2T(ACK_OFF(n));
+      s.n_slots = n;
+      s.expected = m.expected;
+      s.elect = (m.flags & LE_BF_ELECT) != 0;
+      s.my_slot = mine;
+      s.acked = 0;
       s.missed = 0;
       s.fail_detected = 0;
-      m_round_end(NULL);
+      if(retry) {
+        radio_off();
+        at(s.tb + MS2T(SLOT_OFF(mine)), m_retry);
+      } else {
+        m_after_ack();   /* election round: still wait for the RESULT */
+      }
     } else if(s.state == ST_MEMBER && h.src == s.leader && h.term == s.term &&
        h.round == s.round) {
       le_ackmap_t m;
@@ -1300,8 +1465,10 @@ input_cb(const void *data, uint16_t len, const linkaddr_t *src, const linkaddr_t
     break;
 
   case LE_MSG_RESULT:
-    if(s.state == ST_MEMBER && h.src == s.leader && h.term == s.term) {
+    if(s.state == ST_MEMBER && h.src == s.leader && h.term == s.term &&
+       h.round != result_rx_round) {   /* the second copy is ignored */
       le_result_t m;
+      result_rx_round = h.round;
       memcpy(&m, data, len < sizeof(m) ? len : sizeof(m));
       s.n_succ = m.n_succ > LE_SUCC_LEN ? LE_SUCC_LEN : m.n_succ;
       memcpy(s.succ, m.succ, s.n_succ);
@@ -1367,7 +1534,7 @@ fail_end(void *ptr)
   LOG_PREFIX();
   printf("RECOVER\n");
   s.n_backlog = 0;
-  enter_listen((uint32_t)LE_BOOT_WAIT_MS * (1 + s.cluster_size));
+  enter_listen((uint32_t)LE_BOOT_WAIT_MS * (1 + s.cluster_size) + LISTEN_JITTER_MS());
 }
 
 static void
@@ -1426,6 +1593,10 @@ PROCESS_THREAD(le_process, ev, data)
 
   PROCESS_BEGIN();
 
+  /* The sky platform seeds the generator with a DS2411 byte that is the same
+   * on every TelosB, so all motes would draw identical "random" numbers. */
+  random_init(serial_id());
+
   memset(&s, 0, sizeof(s));
   s.me = LE_NONE;
 #ifdef LE_FORCE_INDEX
@@ -1444,9 +1615,9 @@ PROCESS_THREAD(le_process, ev, data)
     leds_on(LEDS_RED);
     PROCESS_EXIT();
   }
-  s.cluster = node_cluster[s.me];
+  s.cluster = CLUSTER_OF(s.me);
   for(i = 0; i < N_NODES; i++) {
-    if(node_cluster[i] == s.cluster) {
+    if(CLUSTER_OF(i) == s.cluster) {
       s.cluster_mask |= BIT(i);
       s.cluster_size++;
       if(i < s.me) {
@@ -1468,6 +1639,7 @@ PROCESS_THREAD(le_process, ev, data)
   NETSTACK_RADIO.set_value(RADIO_PARAM_CHANNEL,
                            LE_RF_CHANNEL - (LE_CLUSTER_OWN_CHANNEL ? s.cluster : 0));
   NETSTACK_RADIO.set_value(RADIO_PARAM_TXPOWER, LE_TX_POWER_DBM);
+  NETSTACK_RADIO.set_value(RADIO_PARAM_CCA_THRESHOLD, LE_CCA_THRESH_DBM);
   nullnet_set_input_callback(input_cb);
 #ifdef CONTIKI_TARGET_SKY
   SENSORS_ACTIVATE(button_sensor);
@@ -1478,6 +1650,11 @@ PROCESS_THREAD(le_process, ev, data)
          s.cluster_rank, N_NODES, le_energy());
   for(i = 0; i < LINKADDR_SIZE; i++) {
     printf("%02x", linkaddr_node_addr.u8[i]);
+  }
+  {
+    radio_value_t cca = 0;
+    NETSTACK_RADIO.get_value(RADIO_PARAM_CCA_THRESHOLD, &cca);
+    printf(" cca_dbm=%d", (int)cca);
   }
   printf(" ram_static=%u state_bytes=%u k=%u period_ms=%u rot=%u\n", le_static_ram(),
          (unsigned)(sizeof(s) + sizeof(node_addr) + sizeof(txbuf)),

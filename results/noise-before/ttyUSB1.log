@@ -1,0 +1,535 @@
+connecting to /dev/ttyUSB1 [OK]
+ü7×›þ“/“×þÛ¯{ÿo[ßkg¿ÿÿ;_ÿß¿ÿ«‹÷ü“o“×üË¿{üË¯{üÿ;_ÿ×¿ÿë‹÷LE 1 22617 RND r=3 term=1 type=DATA reason=none slots=1 rx=0 ackmap=0x0
+LE 1 22625 RD r=3 src=1 seq=2 temp=2840 light=140
+LE 1 22625 STAT r=3 role=LEADER e=19934 tx=3,0,0,3,1,0 txB=75,0,0,36,20,0 rx=0,1,1,0,0,0 mac=7 coll=0 radio_ms=12641 txon_ms=8 drop=0 nbr=1 stack=434 noise=0,0
+LE 1 27507 RND r=4 term=1 type=DATA reason=none slots=1 rx=1 ackmap=0x1
+LE 1 27515 RD r=4 src=0 seq=55 temp=2662 light=236
+LE 1 27515 RD r=4 src=0 seq=56 temp=2664 light=236
+LE 1 27523 RD r=4 src=1 seq=3 temp=2832 light=140
+LE 1 27531 STAT r=4 role=LEADER e=19919 tx=4,0,0,4,1,0 txB=100,0,0,48,20,0 rx=0,2,1,0,0,0 mac=9 coll=0 radio_ms=12794 txon_ms=10 drop=0 nbr=1 stack=434 noise=0,0
+[ERR : CSMA      ] failed to parse 0
+[ERR : CSMA      ] failed to parse 0
+[ERR : CSMA      ] failed to parse 0
+[ERR : CSMA      ] failed to parse 0
+LE 1 32617 RND r=5 term=1 type=DATA reason=none slots=1 rx=0 ackmap=0x0
+LE 1 32625 RD r=5 src=1 seq=4 temp=2830 light=144
+LE 1 32625 STAT r=5 role=LEADER e=19905 tx=5,0,0,5,1,0 txB=125,0,0,60,20,0 rx=0,2,1,0,0,0 mac=11 coll=0 radio_ms=13052 txon_ms=12 drop=0 nbr=1 stack=434 noise=0,0
+[ERR : CSMA      ] failed to parse 0
+[ERR : CSMA      ] failed to parse 0
+[ERR : CSMA      ] failed to parse 0
+LE 1 37617 RND r=6 term=1 type=DATA reason=none slots=1 rx=0 ackmap=0x0
+LE 1 37625 RD r=6 src=1 seq=5 temp=2830 light=143
+LE 1 37625 STAT r=6 role=LEADER e=19891 tx=6,0,0,6,1,0 txB=150,0,0,72,20,0 rx=0,2,1,0,0,0 mac=13 coll=0 radio_ms=13310 txon_ms=15 drop=0 nbr=1 stack=434 noise=0,0
+LE 1 42507 RND r=7 term=1 type=DATA reason=none slots=1 rx=1 ackmap=0x1
+LE 1 42515 RD r=7 src=0 seq=57 temp=2666 light=238
+LE 1 42515 RD r=7 src=0 seq=58 temp=2662 light=237
+LE 1 42523 RD r=7 src=0 seq=59 temp=2664 light=238
+LE 1 42531 RD r=7 src=1 seq=6 temp=2826 light=144
+LE 1 42539 STAT r=7 role=LEADER e=19876 tx=7,0,0,7,1,0 txB=175,0,0,84,20,0 rx=0,3,1,0,0,0 mac=15 coll=0 radio_ms=13463 txon_ms=17 drop=0 nbr=1 stack=434 noise=0,0
+LE 1 47617 RND r=8 term=1 type=DATA reason=none slots=1 rx=0 ackmap=0x0
+LE 1 47625 RD r=8 src=1 seq=7 temp=2826 light=144
+LE 1 47625 STAT r=8 role=LEADER e=19862 tx=8,0,0,8,1,0 txB=200,0,0,96,20,0 rx=0,3,1,0,0,0 mac=17 coll=0 radio_ms=13721 txon_ms=19 drop=0 nbr=1 stack=434 noise=0,0
+LE 1 52507 RND r=9 term=1 type=DATA reason=none slots=1 rx=1 ackmap=0x1
+LE 1 52515 RD r=9 src=0 seq=60 temp=2658 light=241
+LE 1 52515 RD r=9 src=0 seq=61 temp=2661 light=241
+LE 1 52523 RD r=9 src=1 seq=8 temp=2825 light=143
+LE 1 52531 STAT r=9 role=LEADER e=19847 tx=9,0,0,9,1,0 txB=225,0,0,108,20,0 rx=0,4,1,0,0,0 mac=19 coll=0 radio_ms=13873 txon_ms=22 drop=0 nbr=1 stack=434 noise=0,0
+LE 1 57617 RND r=10 term=1 type=DATA reason=none slots=1 rx=0 ackmap=0x0
+LE 1 57625 RD r=10 src=1 seq=9 temp=2827 light=144
+LE 1 57625 STAT r=10 role=LEADER e=19833 tx=10,0,0,10,1,0 txB=250,0,0,120,20,0 rx=0,4,1,0,0,0 mac=21 coll=0 radio_ms=14131 txon_ms=24 drop=0 nbr=1 stack=434 noise=0,0
+LE 1 62617 RND r=11 term=1 type=DATA reason=none slots=1 rx=0 ackmap=0x0
+LE 1 62625 RD r=11 src=1 seq=10 temp=2824 light=132
+LE 1 62625 STAT r=11 role=LEADER e=19819 tx=11,0,0,11,1,0 txB=275,0,0,132,20,0 rx=0,4,1,0,0,0 mac=23 coll=0 radio_ms=14389 txon_ms=26 drop=0 nbr=1 stack=434 noise=0,0
+LE 1 67617 RND r=12 term=1 type=DATA reason=none slots=1 rx=0 ackmap=0x0
+LE 1 67625 RD r=12 src=1 seq=11 temp=2823 light=132
+LE 1 67375 PRUNE node=0
+LE 1 67632 STAT r=12 role=LEADER e=19805 tx=12,0,0,12,1,0 txB=300,0,0,144,20,0 rx=0,4,1,0,0,0 mac=25 coll=0 radio_ms=14648 txon_ms=29 drop=0 nbr=1 stack=434 noise=0,0
+LE 1 67679 ORPHAN r=12
+LE 1 67679 ROLE role=LISTEN term=1 leader=-1 round=12
+LE 1 94789 ROLE role=LEADER term=2 leader=1 round=13
+LE 1 95296 RND r=13 term=2 type=ELECT reason=bootstrap slots=1 rx=0 ackmap=0x0
+LE 1 95304 RD r=13 src=1 seq=12 temp=2837 light=131
+LE 1 95312 ELECT r=13 reason=bootstrap winner=1 term=2 dur_ms=265 ctrl_local=3 relaxed=0 cand=1:840:19751:-128 succ=
+LE 1 95320 STAT r=13 role=LEADER e=19739 tx=13,0,0,13,2,0 txB=325,0,0,156,40,0 rx=0,4,1,0,0,0 mac=28 coll=0 radio_ms=42016 txon_ms=32 drop=0 nbr=1 stack=434 noise=0,0
+LE 1 100187 RND r=14 term=2 type=DATA reason=none slots=1 rx=1 ackmap=0x1
+LE 1 100195 RD r=14 src=0 seq=68 temp=2665 light=247
+LE 1 100203 RD r=14 src=0 seq=69 temp=2663 light=247
+LE 1 100203 RD r=14 src=0 seq=70 temp=2660 light=249
+LE 1 100210 RD r=14 src=1 seq=13 temp=2842 light=133
+LE 1 100218 STAT r=14 role=LEADER e=19724 tx=14,0,0,14,2,0 txB=350,0,0,168,40,0 rx=0,5,1,0,0,0 mac=30 coll=0 radio_ms=42168 txon_ms=35 drop=0 nbr=1 stack=434 noise=0,0
+LE 1 105187 RND r=15 term=2 type=DATA reason=none slots=1 rx=1 ackmap=0x1
+LE 1 105195 RD r=15 src=0 seq=71 temp=2650 light=252
+LE 1 105203 RD r=15 src=1 seq=14 temp=2845 light=133
+LE 1 105203 STAT r=15 role=LEADER e=19709 tx=15,0,0,15,2,0 txB=375,0,0,180,40,0 rx=0,6,1,0,0,0 mac=32 coll=0 radio_ms=42320 txon_ms=37 drop=0 nbr=1 stack=434 noise=0,0
+[ERR : CSMA      ] failed to parse 0
+LE 1 110187 RND r=16 term=2 type=DATA reason=none slots=1 rx=1 ackmap=0x1
+LE 1 110195 RD r=16 src=0 seq=72 temp=2646 light=258
+LE 1 110203 RD r=16 src=1 seq=15 temp=2847 light=132
+LE 1 110203 STAT r=16 role=LEADER e=19694 tx=16,0,0,16,2,0 txB=400,0,0,192,40,0 rx=0,7,1,0,0,0 mac=34 coll=0 radio_ms=42472 txon_ms=39 drop=0 nbr=1 stack=434 noise=0,0
+LE 1 115187 RND r=17 term=2 type=DATA reason=none slots=1 rx=1 ackmap=0x1
+LE 1 115195 RD r=17 src=0 seq=73 temp=2644 light=255
+LE 1 115203 RD r=17 src=1 seq=16 temp=2847 light=134
+LE 1 115203 STAT r=17 role=LEADER e=19679 tx=17,0,0,17,2,0 txB=425,0,0,204,40,0 rx=0,8,1,0,0,0 mac=36 coll=0 radio_ms=42625 txon_ms=42 drop=0 nbr=1 stack=434 noise=0,0
+LE 1 120187 RND r=18 term=2 type=DATA reason=none slots=1 rx=1 ackmap=0x1
+LE 1 120195 RD r=18 src=0 seq=74 temp=2644 light=256
+LE 1 120203 RD r=18 src=1 seq=17 temp=2849 light=131
+LE 1 120203 STAT r=18 role=LEADER e=19664 tx=18,0,0,18,2,0 txB=450,0,0,216,40,0 rx=0,9,1,0,0,0 mac=38 coll=0 radio_ms=42775 txon_ms=43 drop=0 nbr=1 stack=434 noise=0,0
+[ERR : CSMA      ] failed to parse 0
+[ERR : CSMA      ] failed to parse 0
+[ERR : CSMA      ] failed to parse 0
+LE 1 125296 RND r=19 term=2 type=DATA reason=none slots=1 rx=1 ackmap=0x1
+LE 1 125304 RD r=19 src=0 seq=75 temp=2644 light=257
+LE 1 125312 RD r=19 src=1 seq=18 temp=2847 light=134
+LE 1 125312 STAT r=19 role=LEADER e=19649 tx=19,0,0,19,2,0 txB=475,0,0,228,40,0 rx=0,10,1,0,0,0 mac=40 coll=0 radio_ms=43034 txon_ms=46 drop=0 nbr=1 stack=434 noise=0,0
+LE 1 130296 RND r=20 term=2 type=DATA reason=none slots=1 rx=0 ackmap=0x0
+LE 1 130304 RD r=20 src=1 seq=19 temp=2850 light=135
+LE 1 130312 STAT r=20 role=LEADER e=19635 tx=20,0,0,20,2,0 txB=500,0,0,240,40,0 rx=0,10,1,0,0,0 mac=42 coll=0 radio_ms=43291 txon_ms=48 drop=0 nbr=1 stack=434 noise=0,0
+LE 1 135187 RND r=21 term=2 type=DATA reason=none slots=1 rx=1 ackmap=0x1
+LE 1 135195 RD r=21 src=0 seq=76 temp=2641 light=260
+LE 1 135203 RD r=21 src=0 seq=77 temp=2639 light=260
+LE 1 135203 RD r=21 src=1 seq=20 temp=2846 light=135
+LE 1 135210 STAT r=21 role=LEADER e=19620 tx=21,0,0,21,2,0 txB=525,0,0,252,40,0 rx=0,11,1,0,0,0 mac=44 coll=0 radio_ms=43442 txon_ms=50 drop=0 nbr=1 stack=434 noise=0,0
+LE 1 140296 RND r=22 term=2 type=DATA reason=none slots=1 rx=0 ackmap=0x0
+LE 1 140304 RD r=22 src=1 seq=21 temp=2846 light=136
+LE 1 140312 STAT r=22 role=LEADER e=19606 tx=22,0,0,22,2,0 txB=550,0,0,264,40,0 rx=0,11,1,0,0,0 mac=46 coll=0 radio_ms=43701 txon_ms=53 drop=0 nbr=1 stack=434 noise=0,0
+LE 1 145296 RND r=23 term=2 type=DATA reason=none slots=1 rx=0 ackmap=0x0
+LE 1 145304 RD r=23 src=1 seq=22 temp=2844 light=136
+LE 1 145312 STAT r=23 role=LEADER e=19592 tx=23,0,0,23,2,0 txB=575,0,0,276,40,0 rx=0,11,1,0,0,0 mac=48 coll=0 radio_ms=43958 txon_ms=55 drop=0 nbr=1 stack=434 noise=0,0
+LE 1 150187 RND r=24 term=2 type=DATA reason=none slots=1 rx=1 ackmap=0x1
+LE 1 150195 RD r=24 src=0 seq=78 temp=2638 light=260
+LE 1 150203 RD r=24 src=0 seq=79 temp=2636 light=260
+LE 1 150203 RD r=24 src=0 seq=80 temp=2637 light=265
+LE 1 150210 RD r=24 src=1 seq=23 temp=2845 light=135
+LE 1 150218 STAT r=24 role=LEADER e=19577 tx=24,0,0,24,2,0 txB=600,0,0,288,40,0 rx=0,12,1,0,0,0 mac=50 coll=0 radio_ms=44109 txon_ms=57 drop=0 nbr=1 stack=434 noise=0,0
+LE 1 155187 RND r=25 term=2 type=DATA reason=none slots=1 rx=1 ackmap=0x1
+LE 1 155195 RD r=25 src=0 seq=81 temp=2637 light=266
+LE 1 155203 RD r=25 src=1 seq=24 temp=2844 light=136
+LE 1 155203 STAT r=25 role=LEADER e=19562 tx=25,0,0,25,2,0 txB=625,0,0,300,40,0 rx=0,13,1,0,0,0 mac=52 coll=0 radio_ms=44262 txon_ms=60 drop=0 nbr=1 stack=436 noise=0,0
+LE 1 160187 RND r=26 term=2 type=DATA reason=none slots=1 rx=1 ackmap=0x1
+LE 1 160195 RD r=26 src=0 seq=82 temp=2637 light=267
+LE 1 160203 RD r=26 src=1 seq=25 temp=2847 light=131
+LE 1 160203 STAT r=26 role=LEADER e=19547 tx=26,0,0,26,2,0 txB=650,0,0,312,40,0 rx=0,14,1,0,0,0 mac=54 coll=0 radio_ms=44414 txon_ms=62 drop=0 nbr=1 stack=436 noise=0,0
+LE 1 165296 RND r=27 term=2 type=DATA reason=none slots=1 rx=0 ackmap=0x0
+LE 1 165304 RD r=27 src=1 seq=26 temp=2845 light=150
+LE 1 165312 STAT r=27 role=LEADER e=19533 tx=27,0,0,27,2,0 txB=675,0,0,324,40,0 rx=0,14,1,0,0,0 mac=56 coll=0 radio_ms=44671 txon_ms=64 drop=0 nbr=1 stack=436 noise=0,0
+LE 1 170187 RND r=28 term=2 type=DATA reason=none slots=1 rx=1 ackmap=0x1
+LE 1 170195 RD r=28 src=0 seq=83 temp=2643 light=267
+LE 1 170203 RD r=28 src=0 seq=84 temp=2640 light=266
+LE 1 170203 RD r=28 src=1 seq=27 temp=2844 light=148
+LE 1 170210 STAT r=28 role=LEADER e=19518 tx=28,0,0,28,2,0 txB=700,0,0,336,40,0 rx=0,15,1,0,0,0 mac=58 coll=0 radio_ms=44823 txon_ms=67 drop=0 nbr=1 stack=436 noise=0,0
+[WARN: CSMA      ] drop duplicate link layer packet from d4b1.931c.0074.1200, seqno 141
+LE 1 175187 RND r=29 term=2 type=DATA reason=none slots=1 rx=1 ackmap=0x1
+LE 1 175195 RD r=29 src=0 seq=85 temp=2635 light=266
+LE 1 175203 RD r=29 src=1 seq=28 temp=2845 light=147
+LE 1 175203 STAT r=29 role=LEADER e=19503 tx=29,0,0,29,2,0 txB=725,0,0,348,40,0 rx=0,16,1,0,0,0 mac=60 coll=0 radio_ms=44975 txon_ms=69 drop=0 nbr=1 stack=436 noise=0,0
+LE 1 180187 RND r=30 term=2 type=DATA reason=none slots=1 rx=1 ackmap=0x1
+LE 1 180195 RD r=30 src=0 seq=86 temp=2636 light=269
+LE 1 180203 RD r=30 src=1 seq=29 temp=2846 light=150
+LE 1 180203 STAT r=30 role=LEADER e=19488 tx=30,0,0,30,2,0 txB=750,0,0,360,40,0 rx=0,17,1,0,0,0 mac=62 coll=0 radio_ms=45127 txon_ms=71 drop=0 nbr=1 stack=436 noise=0,0
+LE 1 185296 RND r=31 term=2 type=DATA reason=none slots=1 rx=0 ackmap=0x0
+LE 1 185304 RD r=31 src=1 seq=30 temp=2844 light=148
+LE 1 185312 STAT r=31 role=LEADER e=19474 tx=31,0,0,31,2,0 txB=775,0,0,372,40,0 rx=0,17,1,0,0,0 mac=64 coll=0 radio_ms=45385 txon_ms=74 drop=0 nbr=1 stack=436 noise=0,0
+LE 1 190039 ROLE role=MEMBER term=3 leader=0 round=32
+[ERR : CSMA      ] failed to parse 0
+LE 1 190039 STEPDOWN other=0 term=3
+LE 1 190039 NEWLDR from=1 to=0 term=3 gap_ms=0 missed=0
+LE 1 190460 STAT r=32 role=MEMBER e=19464 tx=32,0,0,32,2,1 txB=800,0,0,384,40,10 rx=1,17,1,0,0,0 mac=67 coll=0 radio_ms=45698 txon_ms=77 drop=0 nbr=1 stack=436 noise=0,0
+[ERR : CSMA      ] failed to parse 0
+LE 1 195156 MISS n=1
+LE 1 195398 STAT r=33 role=MEMBER e=19463 tx=32,0,0,32,2,1 txB=800,0,0,384,40,10 rx=1,17,1,0,0,0 mac=67 coll=0 radio_ms=45847 txon_ms=77 drop=0 nbr=1 stack=436 noise=-88,-84
+LE 1 200320 STAT r=34 role=MEMBER e=19459 tx=32,1,0,32,2,1 txB=800,25,0,384,40,10 rx=2,17,1,0,0,0 mac=68 coll=0 radio_ms=45887 txon_ms=79 drop=0 nbr=1 stack=436 noise=-85,-41
+[ERR : CSMA      ] failed to parse 0
+LE 1 205320 STAT r=35 role=MEMBER e=19455 tx=32,2,0,32,2,1 txB=800,44,0,384,40,10 rx=3,17,1,0,0,0 mac=69 coll=0 radio_ms=45926 txon_ms=80 drop=0 nbr=1 stack=436 noise=-88,-82
+[ERR : CSMA      ] failed to parse 0
+LE 1 210320 STAT r=36 role=MEMBER e=19451 tx=32,3,0,32,2,1 txB=800,63,0,384,40,10 rx=4,17,1,0,0,0 mac=70 coll=0 radio_ms=45964 txon_ms=81 drop=0 nbr=1 stack=436 noise=-87,-45
+[ERR : CSMA      ] failed to parse 0
+LE 1 215156 MISS n=1
+LE 1 215398 STAT r=37 role=MEMBER e=19450 tx=32,3,0,32,2,1 txB=800,63,0,384,40,10 rx=4,17,1,0,0,0 mac=70 coll=0 radio_ms=46114 txon_ms=81 drop=0 nbr=1 stack=436 noise=-87,-82
+LE 1 220320 STAT r=38 role=MEMBER e=19446 tx=32,4,0,32,2,1 txB=800,88,0,384,40,10 rx=5,17,1,0,0,0 mac=71 coll=0 radio_ms=46154 txon_ms=83 drop=0 nbr=1 stack=436 noise=-95,-83
+[ERR : CSMA      ] failed to parse 0
+LE 1 225156 MISS n=1
+LE 1 225398 STAT r=39 role=MEMBER e=19445 tx=32,4,0,32,2,1 txB=800,88,0,384,40,10 rx=5,17,1,0,0,0 mac=71 coll=0 radio_ms=46302 txon_ms=83 drop=0 nbr=1 stack=436 noise=-84,-81
+LE 1 230328 STAT r=40 role=MEMBER e=19441 tx=32,5,0,32,2,1 txB=800,113,0,384,40,10 rx=6,17,1,0,0,0 mac=73 coll=0 radio_ms=46345 txon_ms=85 drop=0 nbr=1 stack=436 noise=-86,-83
+[ERR : CSMA      ] failed to parse 0
+[ERR : CSMA      ] failed to parse 0
+LE 1 235156 MISS n=1
+LE 1 235398 STAT r=41 role=MEMBER e=19440 tx=32,5,0,32,2,1 txB=800,113,0,384,40,10 rx=6,17,1,0,0,0 mac=73 coll=0 radio_ms=46494 txon_ms=85 drop=0 nbr=1 stack=436 noise=-86,-44
+LE 1 240320 STAT r=42 role=MEMBER e=19436 tx=32,6,0,32,2,1 txB=800,138,0,384,40,10 rx=7,17,1,0,0,0 mac=74 coll=0 radio_ms=46534 txon_ms=87 drop=0 nbr=1 stack=436 noise=-85,-80
+[ERR : CSMA      ] failed to parse 0
+[ERR : CSMA      ] failed to parse 0
+LE 1 245156 MISS n=1
+LE 1 245398 STAT r=43 role=MEMBER e=19435 tx=32,6,0,32,2,1 txB=800,138,0,384,40,10 rx=7,17,1,0,0,0 mac=74 coll=0 radio_ms=46682 txon_ms=87 drop=0 nbr=1 stack=436 noise=-85,-82
+LE 1 250328 STAT r=44 role=MEMBER e=19431 tx=32,7,0,32,2,1 txB=800,163,0,384,40,10 rx=8,17,1,0,0,0 mac=76 coll=0 radio_ms=46725 txon_ms=90 drop=0 nbr=1 stack=436 noise=-71,-43
+[ERR : CSMA      ] failed to parse 0
+LE 1 255156 MISS n=1
+LE 1 255398 STAT r=45 role=MEMBER e=19430 tx=32,7,0,32,2,1 txB=800,163,0,384,40,10 rx=8,17,1,0,0,0 mac=76 coll=0 radio_ms=46874 txon_ms=90 drop=0 nbr=1 stack=436 noise=-87,-83
+[ERR : CSMA      ] failed to parse 0
+LE 1 260187 ALIVE leader=0 missed_beacon=2
+LE 1 260429 STAT r=46 role=MEMBER e=19428 tx=32,7,0,32,2,1 txB=800,163,0,384,40,10 rx=8,17,1,1,0,0 mac=76 coll=0 radio_ms=47055 txon_ms=90 drop=0 nbr=1 stack=436 noise=-84,-81
+LE 1 265320 STAT r=47 role=MEMBER e=19424 tx=32,8,0,32,2,1 txB=800,194,0,384,40,10 rx=9,17,1,1,0,0 mac=77 coll=0 radio_ms=47095 txon_ms=92 drop=0 nbr=1 stack=436 noise=-80,-76
+[ERR : CSMA      ] failed to parse 0
+LE 1 270328 STAT r=48 role=MEMBER e=19420 tx=32,9,0,32,2,1 txB=800,213,0,384,40,10 rx=10,17,1,1,0,0 mac=79 coll=0 radio_ms=47137 txon_ms=94 drop=0 nbr=1 stack=436 noise=-84,-81
+[ERR : CSMA      ] failed to parse 0
+LE 1 275320 STAT r=49 role=MEMBER e=19416 tx=32,10,0,32,2,1 txB=800,232,0,384,40,10 rx=11,17,1,1,0,0 mac=80 coll=0 radio_ms=47177 txon_ms=96 drop=0 nbr=1 stack=436 noise=-76,-46
+[ERR : CSMA      ] failed to parse 0
+LE 1 280320 STAT r=50 role=MEMBER e=19412 tx=32,11,0,32,2,1 txB=800,251,0,384,40,10 rx=12,17,1,1,0,0 mac=81 coll=0 radio_ms=47215 txon_ms=97 drop=0 nbr=1 stack=436 noise=-86,-51
+[ERR : CSMA      ] failed to parse 0
+[ERR : CSMA      ] failed to parse 0
+LE 1 285492 STAT r=51 role=MEMBER e=19406 tx=32,13,0,32,2,1 txB=800,289,0,384,40,10 rx=13,17,1,1,0,0 mac=85 coll=0 radio_ms=47360 txon_ms=103 drop=0 nbr=1 stack=436 noise=-86,-34
+[ERR : CSMA      ] failed to parse 0
+[ERR : CSMA      ] failed to parse 0
+LE 1 290500 STAT r=52 role=MEMBER e=19400 tx=32,15,0,32,2,1 txB=800,327,0,384,40,10 rx=14,17,1,1,0,0 mac=91 coll=0 radio_ms=47513 txon_ms=111 drop=0 nbr=1 stack=436 noise=-88,-83
+LE 1 295335 STAT r=53 role=MEMBER e=19396 tx=32,16,0,32,2,1 txB=800,352,0,384,40,10 rx=15,17,1,1,0,0 mac=94 coll=0 radio_ms=47561 txon_ms=116 drop=0 nbr=1 stack=436 noise=-87,-84
+[ERR : CSMA      ] failed to parse 0
+LE 1 300320 STAT r=54 role=MEMBER e=19392 tx=32,17,0,32,2,1 txB=800,371,0,384,40,10 rx=16,17,1,1,0,0 mac=95 coll=0 radio_ms=47599 txon_ms=117 drop=0 nbr=1 stack=436 noise=-86,-83
+[ERR : CSMA      ] failed to parse 0
+LE 1 305320 STAT r=55 role=MEMBER e=19388 tx=32,18,0,32,2,1 txB=800,390,0,384,40,10 rx=17,17,1,1,0,0 mac=96 coll=0 radio_ms=47638 txon_ms=119 drop=0 nbr=1 stack=436 noise=-85,-82
+[ERR : CSMA      ] failed to parse 0
+[ERR : CSMA      ] failed to parse 0
+LE 1 310601 STAT r=56 role=MEMBER e=19380 tx=32,18,2,32,2,1 txB=800,390,54,384,40,10 rx=18,17,1,1,0,0 mac=98 coll=0 radio_ms=47979 txon_ms=122 drop=0 nbr=1 stack=436 noise=-84,-81
+LE 1 315367 RESULT new=1 term=4
+LE 1 315609 STAT r=57 role=MEMBER e=19370 tx=32,18,4,32,2,1 txB=800,390,120,384,40,10 rx=19,17,1,2,1,0 mac=100 coll=0 radio_ms=48269 txon_ms=125 drop=0 nbr=1 stack=436 noise=-81,-79
+LE 1 320109 ROLE role=LEADER term=4 leader=1 round=58
+[ERR : CSMA      ] failed to parse 0
+LE 1 320617 RND r=58 term=4 type=DATA reason=none slots=1 rx=0 ackmap=0x0
+LE 1 320625 RD r=58 src=1 seq=54 temp=2828 light=143
+LE 1 320632 RD r=58 src=1 seq=55 temp=2829 light=143
+LE 1 320632 RD r=58 src=1 seq=56 temp=2828 light=143
+LE 1 320640 RD r=58 src=1 seq=57 temp=2830 light=143
+LE 1 320648 STAT r=58 role=LEADER e=19356 tx=33,18,4,33,2,1 txB=825,390,120,396,40,10 rx=19,17,1,2,1,0 mac=102 coll=0 radio_ms=48526 txon_ms=126 drop=0 nbr=1 stack=436 noise=0,0
+LE 1 325507 RND r=59 term=4 type=DATA reason=none slots=1 rx=1 ackmap=0x1
+LE 1 325515 RD r=59 src=0 seq=114 temp=2630 light=258
+LE 1 325523 RD r=59 src=0 seq=115 temp=2634 light=257
+LE 1 325531 RD r=59 src=1 seq=58 temp=2832 light=142
+LE 1 325531 STAT r=59 role=LEADER e=19341 tx=34,18,4,34,2,1 txB=850,390,120,408,40,10 rx=19,18,1,2,1,0 mac=104 coll=0 radio_ms=48679 txon_ms=129 drop=0 nbr=1 stack=436 noise=0,0
+LE 1 330507 RND r=60 term=4 type=DATA reason=none slots=1 rx=1 ackmap=0x1
+LE 1 330515 RD r=60 src=0 seq=116 temp=2630 light=271
+LE 1 330523 RD r=60 src=1 seq=59 temp=2831 light=139
+LE 1 330523 STAT r=60 role=LEADER e=19326 tx=35,18,4,35,2,1 txB=875,390,120,420,40,10 rx=19,19,1,2,1,0 mac=106 coll=0 radio_ms=48832 txon_ms=131 drop=0 nbr=1 stack=436 noise=0,0
+LE 1 335617 RND r=61 term=4 type=DATA reason=none slots=1 rx=0 ackmap=0x0
+LE 1 335625 RD r=61 src=1 seq=60 temp=2832 light=156
+LE 1 335632 STAT r=61 role=LEADER e=19312 tx=36,18,4,36,2,1 txB=900,390,120,432,40,10 rx=19,19,1,2,1,0 mac=108 coll=0 radio_ms=49090 txon_ms=133 drop=0 nbr=1 stack=436 noise=0,0
+LE 1 340359 ROLE role=MEMBER term=5 leader=0 round=62
+[ERR : CSMA      ] failed to parse 0
+LE 1 340359 STEPDOWN other=0 term=5
+LE 1 340359 NEWLDR from=1 to=0 term=5 gap_ms=0 missed=0
+LE 1 340781 STAT r=62 role=MEMBER e=19302 tx=37,18,4,37,2,2 txB=925,390,120,444,40,20 rx=20,19,1,2,1,0 mac=111 coll=0 radio_ms=49384 txon_ms=137 drop=0 nbr=1 stack=436 noise=0,0
+LE 1 345640 STAT r=63 role=MEMBER e=19298 tx=37,19,4,37,2,2 txB=925,409,120,444,40,20 rx=21,19,1,2,1,0 mac=112 coll=0 radio_ms=49422 txon_ms=138 drop=0 nbr=1 stack=436 noise=-86,-83
+[ERR : CSMA      ] failed to parse 0
+LE 1 350640 STAT r=64 role=MEMBER e=19294 tx=37,20,4,37,2,2 txB=925,428,120,444,40,20 rx=22,19,1,2,1,0 mac=113 coll=0 radio_ms=49460 txon_ms=140 drop=0 nbr=1 stack=436 noise=-84,-81
+[ERR : CSMA      ] failed to parse 0
+LE 1 355640 STAT r=65 role=MEMBER e=19290 tx=37,21,4,37,2,2 txB=925,447,120,444,40,20 rx=23,19,1,2,1,0 mac=114 coll=0 radio_ms=49498 txon_ms=141 drop=0 nbr=1 stack=436 noise=-82,-35
+[ERR : CSMA      ] failed to parse 0
+LE 1 360640 STAT r=66 role=MEMBER e=19286 tx=37,22,4,37,2,2 txB=925,466,120,444,40,20 rx=24,19,1,2,1,0 mac=115 coll=0 radio_ms=49535 txon_ms=142 drop=0 nbr=1 stack=436 noise=-85,-81
+[ERR : CSMA      ] failed to parse 0
+LE 1 365476 MISS n=1
+LE 1 365718 STAT r=67 role=MEMBER e=19285 tx=37,22,4,37,2,2 txB=925,466,120,444,40,20 rx=24,19,1,2,1,0 mac=115 coll=0 radio_ms=49684 txon_ms=142 drop=0 nbr=1 stack=436 noise=-85,-34
+[ERR : CSMA      ] failed to parse 0
+LE 1 370507 ALIVE leader=0 missed_beacon=2
+LE 1 370750 STAT r=68 role=MEMBER e=19283 tx=37,22,4,37,2,2 txB=925,466,120,444,40,20 rx=24,19,1,3,1,0 mac=115 coll=0 radio_ms=49863 txon_ms=142 drop=0 nbr=1 stack=436 noise=-80,-42
+[ERR : CSMA      ] failed to parse 0
+LE 1 375476 MISS n=1
+LE 1 375718 STAT r=69 role=MEMBER e=19282 tx=37,22,4,37,2,2 txB=925,466,120,444,40,20 rx=24,19,1,3,1,0 mac=115 coll=0 radio_ms=50011 txon_ms=142 drop=1 nbr=1 stack=436 noise=-85,-83
+LE 1 380585 ROLE role=LEADER term=6 leader=1 round=70
+LE 1 381015 RND r=70 term=6 type=ELECT reason=failover slots=0 rx=0 ackmap=0x0
+LE 1 381023 RD r=70 src=1 seq=66 temp=2823 light=163
+LE 1 381031 RD r=70 src=1 seq=67 temp=2814 light=162
+LE 1 381039 RD r=70 src=1 seq=68 temp=2814 light=161
+LE 1 381039 RD r=70 src=1 seq=69 temp=2810 light=161
+LE 1 381046 ELECT r=70 reason=failover winner=1 term=6 dur_ms=187 ctrl_local=3 relaxed=0 cand=1:824:19277:-128 succ=
+LE 1 380585 FAILDET leader=0 since_ms=20226 missed=2 k=2
+LE 1 380585 TAKEOVER prev=0 rank=0 term=6 missed=2 r=70
+LE 1 380656 JOIN node=0
+LE 1 381085 STAT r=70 role=LEADER e=19265 tx=38,22,4,38,3,2 txB=950,466,120,456,60,20 rx=24,19,1,3,1,1 mac=118 coll=0 radio_ms=50395 txon_ms=146 drop=1 nbr=1 stack=436 noise=-83,-80
+LE 1 386093 RND r=71 term=6 type=DATA reason=none slots=1 rx=0 ackmap=0x0
+LE 1 386101 RD r=71 src=1 seq=70 temp=2808 light=159
+LE 1 386109 STAT r=71 role=LEADER e=19251 tx=39,22,4,39,3,2 txB=975,466,120,468,60,20 rx=24,19,1,3,1,1 mac=120 coll=0 radio_ms=50651 txon_ms=148 drop=1 nbr=1 stack=436 noise=0,0
+LE 1 391093 RND r=72 term=6 type=DATA reason=none slots=1 rx=0 ackmap=0x0
+LE 1 391101 RD r=72 src=1 seq=71 temp=2807 light=160
+LE 1 391109 STAT r=72 role=LEADER e=19237 tx=40,22,4,40,3,2 txB=1000,466,120,480,60,20 rx=24,19,1,3,1,1 mac=122 coll=0 radio_ms=50910 txon_ms=151 drop=1 nbr=1 stack=436 noise=0,0
+LE 1 396093 RND r=73 term=6 type=DATA reason=none slots=1 rx=0 ackmap=0x0
+LE 1 396101 RD r=73 src=1 seq=72 temp=2804 light=161
+LE 1 395851 PRUNE node=0
+LE 1 396109 STAT r=73 role=LEADER e=19223 tx=41,22,4,41,3,2 txB=1025,466,120,492,60,20 rx=24,19,1,3,1,1 mac=124 coll=0 radio_ms=51167 txon_ms=153 drop=1 nbr=1 stack=436 noise=0,0
+LE 1 396156 ORPHAN r=73
+LE 1 396164 ROLE role=LISTEN term=6 leader=-1 round=73
+LE 1 420828 ROLE role=LEADER term=7 leader=1 round=74
+[ERR : CSMA      ] failed to parse 0
+LE 1 421335 RND r=74 term=7 type=ELECT reason=bootstrap slots=1 rx=1 ackmap=0x1
+LE 1 421343 RD r=74 src=0 seq=132 temp=2653 light=196
+LE 1 421351 RD r=74 src=0 seq=133 temp=2654 light=201
+LE 1 421359 RD r=74 src=0 seq=134 temp=2656 light=202
+LE 1 421367 RD r=74 src=1 seq=73 temp=2812 light=165
+LE 1 421367 ELECT r=74 reason=bootstrap winner=1 term=7 dur_ms=265 ctrl_local=3 relaxed=0 cand=1:882:19178:-49,0:833:17772:-49x succ=0
+LE 1 421390 STAT r=74 role=LEADER e=19166 tx=42,22,4,42,4,2 txB=1050,466,120,504,80,20 rx=24,19,2,3,1,1 mac=127 coll=0 radio_ms=76094 txon_ms=157 drop=1 nbr=1 stack=436 noise=0,0
+LE 1 426226 RND r=75 term=7 type=DATA reason=none slots=1 rx=1 ackmap=0x1
+LE 1 426234 RD r=75 src=0 seq=133 temp=2654 light=201
+LE 1 426242 RD r=75 src=0 seq=134 temp=2656 light=202
+LE 1 426250 RD r=75 src=0 seq=135 temp=2657 light=208
+LE 1 426250 RD r=75 src=1 seq=74 temp=2816 light=165
+LE 1 426257 STAT r=75 role=LEADER e=19151 tx=43,22,4,43,4,2 txB=1075,466,120,516,80,20 rx=24,20,2,3,1,1 mac=129 coll=0 radio_ms=76246 txon_ms=159 drop=1 nbr=1 stack=436 noise=0,0
+LE 1 431226 RND r=76 term=7 type=DATA reason=none slots=1 rx=1 ackmap=0x1
+LE 1 431234 RD r=76 src=0 seq=136 temp=2660 light=207
+LE 1 431242 RD r=76 src=1 seq=75 temp=2817 light=167
+LE 1 431242 STAT r=76 role=LEADER e=19136 tx=44,22,4,44,4,2 txB=1100,466,120,528,80,20 rx=24,21,2,3,1,1 mac=131 coll=0 radio_ms=76399 txon_ms=161 drop=1 nbr=1 stack=436 noise=0,0
+LE 1 436226 RND r=77 term=7 type=DATA reason=none slots=1 rx=1 ackmap=0x1
+LE 1 436234 RD r=77 src=0 seq=137 temp=2664 light=208
+LE 1 436242 RD r=77 src=1 seq=76 temp=2813 light=168
+LE 1 436242 STAT r=77 role=LEADER e=19121 tx=45,22,4,45,4,2 txB=1125,466,120,540,80,20 rx=24,22,2,3,1,1 mac=133 coll=0 radio_ms=76552 txon_ms=164 drop=1 nbr=1 stack=436 noise=0,0
+LE 1 441335 RND r=78 term=7 type=DATA reason=none slots=1 rx=0 ackmap=0x0
+LE 1 441343 RD r=78 src=1 seq=77 temp=2812 light=169
+LE 1 441351 STAT r=78 role=LEADER e=19107 tx=46,22,4,46,4,2 txB=1150,466,120,552,80,20 rx=24,22,2,3,1,1 mac=135 coll=0 radio_ms=76810 txon_ms=166 drop=1 nbr=1 stack=436 noise=0,0
+LE 1 446226 RND r=79 term=7 type=DATA reason=none slots=1 rx=1 ackmap=0x1
+LE 1 446234 RD r=79 src=0 seq=138 temp=2659 light=210
+LE 1 446242 RD r=79 src=0 seq=139 temp=2658 light=215
+LE 1 446250 RD r=79 src=1 seq=78 temp=2809 light=170
+LE 1 446250 STAT r=79 role=LEADER e=19092 tx=47,22,4,47,4,2 txB=1175,466,120,564,80,20 rx=24,23,2,3,1,1 mac=137 coll=0 radio_ms=76961 txon_ms=167 drop=1 nbr=1 stack=436 noise=0,0
+LE 1 451335 RND r=80 term=7 type=DATA reason=none slots=1 rx=0 ackmap=0x0
+LE 1 451343 RD r=80 src=1 seq=79 temp=2809 light=169
+LE 1 451351 STAT r=80 role=LEADER e=19078 tx=48,22,4,48,4,2 txB=1200,466,120,576,80,20 rx=24,23,2,3,1,1 mac=139 coll=0 radio_ms=77219 txon_ms=170 drop=1 nbr=1 stack=436 noise=0,0
+LE 1 456335 RND r=81 term=7 type=DATA reason=none slots=1 rx=0 ackmap=0x0
+LE 1 456343 RD r=81 src=1 seq=80 temp=2809 light=168
+LE 1 456351 STAT r=81 role=LEADER e=19064 tx=49,22,4,49,4,2 txB=1225,466,120,588,80,20 rx=24,23,2,3,1,1 mac=141 coll=0 radio_ms=77477 txon_ms=172 drop=1 nbr=1 stack=436 noise=0,0
+LE 1 461335 RND r=82 term=7 type=DATA reason=none slots=1 rx=0 ackmap=0x0
+LE 1 461343 RD r=82 src=1 seq=81 temp=2810 light=167
+LE 1 461093 PRUNE node=0
+LE 1 461351 STAT r=82 role=LEADER e=19050 tx=50,22,4,50,4,2 txB=1250,466,120,600,80,20 rx=24,23,2,3,1,1 mac=143 coll=0 radio_ms=77735 txon_ms=174 drop=1 nbr=1 stack=436 noise=0,0
+LE 1 461398 ORPHAN r=82
+LE 1 461406 ROLE role=LISTEN term=7 leader=-1 round=82
+LE 1 483445 ROLE role=LEADER term=8 leader=1 round=83
+LE 1 483953 RND r=83 term=8 type=ELECT reason=bootstrap slots=1 rx=0 ackmap=0x0
+LE 1 483960 RD r=83 src=1 seq=82 temp=2800 light=164
+LE 1 483968 ELECT r=83 reason=bootstrap winner=1 term=8 dur_ms=265 ctrl_local=3 relaxed=0 cand=1:815:19006:-128 succ=
+LE 1 483976 STAT r=83 role=LEADER e=18994 tx=51,22,4,51,5,2 txB=1275,466,120,612,100,20 rx=24,23,2,3,1,1 mac=146 coll=0 radio_ms=100036 txon_ms=178 drop=1 nbr=1 stack=436 noise=0,0
+LE 1 488953 RND r=84 term=8 type=DATA reason=none slots=1 rx=0 ackmap=0x0
+LE 1 488960 RD r=84 src=1 seq=83 temp=2806 light=167
+LE 1 488968 STAT r=84 role=LEADER e=18980 tx=52,22,4,52,5,2 txB=1300,466,120,624,100,20 rx=24,23,2,3,1,1 mac=148 coll=0 radio_ms=100294 txon_ms=180 drop=1 nbr=1 stack=436 noise=0,0
+LE 1 493953 RND r=85 term=8 type=DATA reason=none slots=1 rx=0 ackmap=0x0
+LE 1 493960 RD r=85 src=1 seq=84 temp=2809 light=164
+LE 1 493710 PRUNE node=0
+LE 1 493968 STAT r=85 role=LEADER e=18966 tx=53,22,4,53,5,2 txB=1325,466,120,636,100,20 rx=24,23,2,3,1,1 mac=150 coll=0 radio_ms=100551 txon_ms=182 drop=1 nbr=1 stack=436 noise=0,0
+LE 1 494015 ORPHAN r=85
+LE 1 494023 ROLE role=LISTEN term=8 leader=-1 round=85
+LE 1 520671 ROLE role=LEADER term=9 leader=1 round=86
+LE 1 521179 RND r=86 term=9 type=ELECT reason=bootstrap slots=1 rx=0 ackmap=0x0
+LE 1 521187 RD r=86 src=1 seq=85 temp=2807 light=166
+LE 1 521195 ELECT r=86 reason=bootstrap winner=1 term=9 dur_ms=265 ctrl_local=3 relaxed=0 cand=1:811:18908:-128 succ=
+LE 1 521203 STAT r=86 role=LEADER e=18896 tx=54,22,4,54,6,2 txB=1350,466,120,648,120,20 rx=24,23,2,6,2,1 mac=153 coll=0 radio_ms=127461 txon_ms=186 drop=1 nbr=1 stack=436 noise=0,0
+LE 1 526070 RND r=87 term=9 type=DATA reason=none slots=1 rx=1 ackmap=0x1
+LE 1 526078 RD r=87 src=1 seq=86 temp=2806 light=167
+LE 1 526085 STAT r=87 role=LEADER e=18881 tx=55,22,4,55,6,2 txB=1375,466,120,660,120,20 rx=24,24,2,6,2,1 mac=155 coll=0 radio_ms=127613 txon_ms=188 drop=1 nbr=1 stack=436 noise=0,0
+LE 1 531179 RND r=88 term=9 type=DATA reason=none slots=1 rx=0 ackmap=0x0
+LE 1 531187 RD r=88 src=1 seq=87 temp=2806 light=167
+LE 1 531195 STAT r=88 role=LEADER e=18867 tx=56,22,4,56,6,2 txB=1400,466,120,672,120,20 rx=24,24,2,6,2,1 mac=157 coll=0 radio_ms=127872 txon_ms=191 drop=1 nbr=1 stack=436 noise=0,0
+LE 1 536179 RND r=89 term=9 type=DATA reason=none slots=1 rx=0 ackmap=0x0
+LE 1 536187 RD r=89 src=1 seq=88 temp=2804 light=167
+LE 1 536195 STAT r=89 role=LEADER e=18853 tx=57,22,4,57,6,2 txB=1425,466,120,684,120,20 rx=24,24,2,6,2,1 mac=159 coll=0 radio_ms=128129 txon_ms=193 drop=1 nbr=1 stack=436 noise=0,0
+LE 1 541070 RND r=90 term=9 type=DATA reason=none slots=1 rx=1 ackmap=0x1
+LE 1 541078 RD r=90 src=0 seq=153 temp=2662 light=232
+LE 1 541085 RD r=90 src=0 seq=154 temp=2668 light=232
+LE 1 541093 RD r=90 src=0 seq=155 temp=2673 light=234
+LE 1 541093 RD r=90 src=1 seq=89 temp=2801 light=167
+LE 1 541101 STAT r=90 role=LEADER e=18838 tx=58,22,4,58,6,2 txB=1450,466,120,696,120,20 rx=24,25,2,6,2,1 mac=161 coll=0 radio_ms=128281 txon_ms=195 drop=1 nbr=1 stack=436 noise=0,0
+[ERR : CSMA      ] failed to parse 0
+LE 1 546070 RND r=91 term=9 type=DATA reason=none slots=1 rx=1 ackmap=0x1
+LE 1 546078 RD r=91 src=0 seq=156 temp=2672 light=232
+LE 1 546085 RD r=91 src=1 seq=90 temp=2800 light=167
+LE 1 546085 STAT r=91 role=LEADER e=18823 tx=59,22,4,59,6,2 txB=1475,466,120,708,120,20 rx=24,26,2,6,2,1 mac=163 coll=0 radio_ms=128435 txon_ms=198 drop=1 nbr=1 stack=436 noise=0,0
+LE 1 551179 RND r=92 term=9 type=DATA reason=none slots=1 rx=0 ackmap=0x0
+LE 1 551187 RD r=92 src=1 seq=91 temp=2798 light=167
+LE 1 551195 STAT r=92 role=LEADER e=18809 tx=60,22,4,60,6,2 txB=1500,466,120,720,120,20 rx=24,26,2,6,2,1 mac=165 coll=0 radio_ms=128693 txon_ms=200 drop=1 nbr=1 stack=436 noise=0,0
+[ERR : CSMA      ] failed to parse 0
+[ERR : CSMA      ] failed to parse 0
+LE 1 556179 RND r=93 term=9 type=DATA reason=none slots=1 rx=0 ackmap=0x0
+LE 1 556187 RD r=93 src=1 seq=92 temp=2799 light=166
+LE 1 556195 STAT r=93 role=LEADER e=18795 tx=61,22,4,61,6,2 txB=1525,466,120,732,120,20 rx=24,26,2,6,2,1 mac=167 coll=0 radio_ms=128952 txon_ms=203 drop=1 nbr=1 stack=436 noise=0,0
+LE 1 561179 RND r=94 term=9 type=DATA reason=none slots=1 rx=0 ackmap=0x0
+LE 1 561187 RD r=94 src=1 seq=93 temp=2795 light=164
+LE 1 560937 PRUNE node=0
+LE 1 561195 STAT r=94 role=LEADER e=18781 tx=62,22,4,62,6,2 txB=1550,466,120,744,120,20 rx=24,26,2,6,2,1 mac=169 coll=0 radio_ms=129209 txon_ms=205 drop=1 nbr=1 stack=436 noise=0,0
+LE 1 561242 ORPHAN r=94
+LE 1 561250 ROLE role=LISTEN term=9 leader=-1 round=94
+LE 1 579984 ROLE role=LEADER term=10 leader=1 round=95
+LE 1 580492 RND r=95 term=10 type=ELECT reason=bootstrap slots=1 rx=0 ackmap=0x0
+LE 1 580500 RD r=95 src=1 seq=94 temp=2788 light=161
+LE 1 580507 ELECT r=95 reason=bootstrap winner=1 term=10 dur_ms=265 ctrl_local=3 relaxed=0 cand=1:805:18747:-128 succ=
+LE 1 580515 STAT r=95 role=LEADER e=18735 tx=63,22,4,63,7,2 txB=1575,466,120,756,140,20 rx=24,26,2,6,2,1 mac=172 coll=0 radio_ms=148205 txon_ms=208 drop=1 nbr=1 stack=436 noise=0,0
+LE 1 585492 RND r=96 term=10 type=DATA reason=none slots=1 rx=0 ackmap=0x0
+LE 1 585500 RD r=96 src=1 seq=95 temp=2788 light=158
+LE 1 585507 STAT r=96 role=LEADER e=18721 tx=64,22,4,64,7,2 txB=1600,466,120,768,140,20 rx=24,26,2,6,2,1 mac=174 coll=0 radio_ms=148462 txon_ms=210 drop=1 nbr=1 stack=436 noise=0,0
+LE 1 590492 RND r=97 term=10 type=DATA reason=none slots=1 rx=0 ackmap=0x0
+LE 1 590500 RD r=97 src=1 seq=96 temp=2790 light=158
+LE 1 590250 PRUNE node=0
+LE 1 590507 STAT r=97 role=LEADER e=18707 tx=65,22,4,65,7,2 txB=1625,466,120,780,140,20 rx=24,26,2,6,2,1 mac=176 coll=0 radio_ms=148719 txon_ms=212 drop=1 nbr=1 stack=436 noise=0,0
+LE 1 590554 ORPHAN r=97
+LE 1 590562 ROLE role=LISTEN term=10 leader=-1 round=97
+LE 1 605773 ROLE role=MEMBER term=10 leader=0 round=101
+LE 1 605773 NEWLDR from=-1 to=0 term=10 gap_ms=0 missed=0
+LE 1 606031 RESULT new=1 term=11
+LE 1 606289 STAT r=101 role=MEMBER e=18669 tx=65,22,5,65,7,2 txB=1625,466,141,780,140,20 rx=25,26,2,7,3,1 mac=177 coll=0 radio_ms=164112 txon_ms=213 drop=1 nbr=1 stack=436 noise=0,0
+LE 1 610773 ROLE role=LEADER term=11 leader=1 round=102
+LE 1 611281 RND r=102 term=11 type=DATA reason=none slots=1 rx=0 ackmap=0x0
+LE 1 611289 RD r=102 src=1 seq=97 temp=2791 light=158
+LE 1 611296 RD r=102 src=1 seq=98 temp=2792 light=157
+LE 1 611304 STAT r=102 role=LEADER e=18653 tx=66,22,5,66,7,2 txB=1650,466,141,792,140,20 rx=26,26,2,8,3,1 mac=179 coll=0 radio_ms=164372 txon_ms=216 drop=1 nbr=1 stack=436 noise=0,0
+LE 1 616281 RND r=103 term=11 type=DATA reason=none slots=1 rx=0 ackmap=0x0
+LE 1 616289 RD r=103 src=1 seq=99 temp=2792 light=155
+LE 1 616296 STAT r=103 role=LEADER e=18637 tx=67,22,5,67,7,2 txB=1675,466,141,804,140,20 rx=27,26,2,9,3,1 mac=181 coll=0 radio_ms=164629 txon_ms=218 drop=1 nbr=1 stack=436 noise=0,0
+LE 1 621281 RND r=104 term=11 type=DATA reason=none slots=1 rx=0 ackmap=0x0
+LE 1 621289 RD r=104 src=1 seq=100 temp=2792 light=153
+LE 1 621039 PRUNE node=0
+LE 1 621296 STAT r=104 role=LEADER e=18622 tx=68,22,5,68,7,2 txB=1700,466,141,816,140,20 rx=27,26,2,10,3,1 mac=183 coll=0 radio_ms=164886 txon_ms=220 drop=1 nbr=1 stack=436 noise=0,0
+LE 1 621351 ORPHAN r=104
+LE 1 621351 ROLE role=LISTEN term=11 leader=-1 round=104
+LE 1 640312 ROLE role=LEADER term=12 leader=1 round=105
+LE 1 640820 RND r=105 term=12 type=ELECT reason=bootstrap slots=1 rx=0 ackmap=0x0
+LE 1 640828 RD r=105 src=1 seq=101 temp=2787 light=153
+LE 1 640835 ELECT r=105 reason=bootstrap winner=1 term=12 dur_ms=257 ctrl_local=3 relaxed=0 cand=1:800:18588:-128 succ=
+LE 1 640851 STAT r=105 role=LEADER e=18576 tx=69,22,5,69,8,2 txB=1725,466,141,828,160,20 rx=27,26,2,10,3,1 mac=186 coll=0 radio_ms=184107 txon_ms=224 drop=1 nbr=1 stack=436 noise=0,0
+LE 1 645820 RND r=106 term=12 type=DATA reason=none slots=1 rx=0 ackmap=0x0
+LE 1 645828 RD r=106 src=1 seq=102 temp=2789 light=154
+LE 1 645835 STAT r=106 role=LEADER e=18562 tx=70,22,5,70,8,2 txB=1750,466,141,840,160,20 rx=27,26,2,10,3,1 mac=188 coll=0 radio_ms=184365 txon_ms=226 drop=1 nbr=1 stack=436 noise=0,0
+LE 1 650820 RND r=107 term=12 type=DATA reason=none slots=1 rx=0 ackmap=0x0
+LE 1 650828 RD r=107 src=1 seq=103 temp=2790 light=151
+LE 1 650578 PRUNE node=0
+LE 1 650835 STAT r=107 role=LEADER e=18548 tx=71,22,5,71,8,2 txB=1775,466,141,852,160,20 rx=27,26,2,10,3,1 mac=190 coll=0 radio_ms=184624 txon_ms=229 drop=1 nbr=1 stack=436 noise=0,0
+LE 1 650890 ORPHAN r=107
+LE 1 650890 ROLE role=LISTEN term=12 leader=-1 round=107
+[ERR : CSMA      ] failed to parse 0
+LE 1 676539 ROLE role=LEADER term=13 leader=1 round=108
+LE 1 677046 RND r=108 term=13 type=ELECT reason=bootstrap slots=1 rx=0 ackmap=0x0
+LE 1 677054 RD r=108 src=1 seq=104 temp=2788 light=151
+LE 1 677062 ELECT r=108 reason=bootstrap winner=1 term=13 dur_ms=265 ctrl_local=3 relaxed=0 cand=1:796:18492:-128 succ=
+LE 1 677078 STAT r=108 role=LEADER e=18480 tx=72,22,5,72,9,2 txB=1800,466,141,864,180,20 rx=27,26,2,12,3,1 mac=193 coll=0 radio_ms=210531 txon_ms=232 drop=1 nbr=1 stack=436 noise=0,0
+LE 1 682046 RND r=109 term=13 type=DATA reason=none slots=1 rx=0 ackmap=0x0
+LE 1 682054 RD r=109 src=1 seq=105 temp=2790 light=150
+LE 1 682062 STAT r=109 role=LEADER e=18466 tx=73,22,5,73,9,2 txB=1825,466,141,876,180,20 rx=27,26,2,12,3,1 mac=195 coll=0 radio_ms=210789 txon_ms=235 drop=1 nbr=1 stack=436 noise=0,0
+LE 1 687046 RND r=110 term=13 type=DATA reason=none slots=1 rx=0 ackmap=0x0
+LE 1 687054 RD r=110 src=1 seq=106 temp=2791 light=150
+LE 1 686804 PRUNE node=0
+LE 1 687062 STAT r=110 role=LEADER e=18452 tx=74,22,5,74,9,2 txB=1850,466,141,888,180,20 rx=27,26,2,12,3,1 mac=197 coll=0 radio_ms=211046 txon_ms=237 drop=1 nbr=1 stack=436 noise=0,0
+LE 1 687117 ORPHAN r=110
+LE 1 687117 ROLE role=LISTEN term=13 leader=-1 round=110
+LE 1 687437 ROLE role=MEMBER term=12 leader=0 round=109
+LE 1 687437 NEWLDR from=-1 to=0 term=12 gap_ms=0 missed=0
+LE 1 687718 STAT r=109 role=MEMBER e=18448 tx=74,23,5,74,9,2 txB=1850,479,141,888,180,20 rx=28,26,2,12,3,1 mac=198 coll=0 radio_ms=211373 txon_ms=238 drop=1 nbr=1 stack=436 noise=0,0
+[ERR : CSMA      ] failed to parse 0
+[ERR : CSMA      ] failed to parse 0
+LE 1 692554 MISS n=1
+LE 1 692796 STAT r=110 role=MEMBER e=18447 tx=74,23,5,74,9,2 txB=1850,479,141,888,180,20 rx=28,26,2,12,3,1 mac=198 coll=0 radio_ms=211522 txon_ms=238 drop=1 nbr=1 stack=436 noise=-83,-43
+LE 1 697718 STAT r=111 role=MEMBER e=18443 tx=74,24,5,74,9,2 txB=1850,504,141,888,180,20 rx=29,26,2,12,3,1 mac=199 coll=0 radio_ms=211564 txon_ms=240 drop=1 nbr=1 stack=436 noise=-85,-82
+[ERR : CSMA      ] failed to parse 0
+LE 1 702718 STAT r=112 role=MEMBER e=18439 tx=74,25,5,74,9,2 txB=1850,523,141,888,180,20 rx=30,26,2,12,3,1 mac=200 coll=0 radio_ms=211605 txon_ms=241 drop=1 nbr=1 stack=436 noise=-86,-83
+[ERR : CSMA      ] failed to parse 0
+LE 1 707718 STAT r=113 role=MEMBER e=18435 tx=74,26,5,74,9,2 txB=1850,542,141,888,180,20 rx=31,26,2,12,3,1 mac=201 coll=0 radio_ms=211646 txon_ms=242 drop=1 nbr=1 stack=436 noise=-87,-36
+[ERR : CSMA      ] failed to parse 0
+LE 1 712554 MISS n=1
+LE 1 712796 STAT r=114 role=MEMBER e=18434 tx=74,26,5,74,9,2 txB=1850,542,141,888,180,20 rx=31,26,2,12,3,1 mac=201 coll=0 radio_ms=211793 txon_ms=242 drop=1 nbr=1 stack=436 noise=-86,-33
+LE 1 717585 ALIVE leader=0 missed_beacon=2
+LE 1 717828 STAT r=115 role=MEMBER e=18432 tx=74,26,5,74,9,2 txB=1850,542,141,888,180,20 rx=31,26,2,13,3,1 mac=201 coll=0 radio_ms=211978 txon_ms=242 drop=1 nbr=1 stack=436 noise=-84,-83
+LE 1 722554 MISS n=1
+LE 1 722796 STAT r=116 role=MEMBER e=18431 tx=74,26,5,74,9,2 txB=1850,542,141,888,180,20 rx=31,26,2,13,3,1 mac=201 coll=0 radio_ms=212125 txon_ms=242 drop=2 nbr=1 stack=436 noise=-85,-83
+LE 1 727664 ROLE role=LEADER term=13 leader=1 round=117
+LE 1 728093 RND r=117 term=13 type=ELECT reason=failover slots=0 rx=0 ackmap=0x0
+LE 1 728101 RD r=117 src=1 seq=112 temp=2783 light=143
+LE 1 728109 RD r=117 src=1 seq=113 temp=2779 light=145
+LE 1 728117 RD r=117 src=1 seq=114 temp=2776 light=144
+LE 1 728125 RD r=117 src=1 seq=115 temp=2774 light=145
+LE 1 728132 ELECT r=117 reason=failover winner=1 term=13 dur_ms=179 ctrl_local=3 relaxed=0 cand=1:794:18427:-128 succ=
+LE 1 727664 FAILDET leader=0 since_ms=20226 missed=2 k=2
+LE 1 727664 TAKEOVER prev=0 rank=0 term=13 missed=2 r=117
+LE 1 728156 STAT r=117 role=LEADER e=18415 tx=75,26,5,75,10,2 txB=1875,542,141,900,200,20 rx=31,26,2,13,3,1 mac=204 coll=0 radio_ms=212509 txon_ms=246 drop=2 nbr=1 stack=436 noise=-77,-72
+[ERR : CSMA      ] failed to parse 0
+LE 1 733023 RND r=118 term=13 type=DATA reason=none slots=0 rx=0 ackmap=0x0
+LE 1 733031 RD r=118 src=1 seq=116 temp=2772 light=145
+LE 1 733039 STAT r=118 role=LEADER e=18401 tx=76,26,5,76,10,2 txB=1900,542,141,912,200,20 rx=31,26,2,13,3,1 mac=206 coll=0 radio_ms=212623 txon_ms=248 drop=2 nbr=1 stack=436 noise=0,0
+LE 1 738023 RND r=119 term=13 type=DATA reason=none slots=0 rx=0 ackmap=0x0
+LE 1 738031 RD r=119 src=1 seq=117 temp=2770 light=146
+LE 1 738039 STAT r=119 role=LEADER e=18387 tx=77,26,5,77,10,2 txB=1925,542,141,924,200,20 rx=31,26,2,13,3,1 mac=208 coll=0 radio_ms=212735 txon_ms=250 drop=2 nbr=1 stack=436 noise=0,0
+LE 1 743023 RND r=120 term=13 type=DATA reason=none slots=0 rx=0 ackmap=0x0
+LE 1 743031 RD r=120 src=1 seq=118 temp=2769 light=149
+LE 1 743039 STAT r=120 role=LEADER e=18373 tx=78,26,5,78,10,2 txB=1950,542,141,936,200,20 rx=31,26,2,13,3,1 mac=210 coll=0 radio_ms=212848 txon_ms=252 drop=2 nbr=1 stack=436 noise=0,0
+LE 1 748023 RND r=121 term=13 type=DATA reason=none slots=0 rx=0 ackmap=0x0
+LE 1 748031 RD r=121 src=1 seq=119 temp=2767 light=150
+LE 1 748039 STAT r=121 role=LEADER e=18359 tx=79,26,5,79,10,2 txB=1975,542,141,948,200,20 rx=31,26,2,13,3,1 mac=212 coll=0 radio_ms=212961 txon_ms=254 drop=2 nbr=1 stack=436 noise=0,0
+LE 1 753023 RND r=122 term=13 type=DATA reason=none slots=0 rx=0 ackmap=0x0
+LE 1 753031 RD r=122 src=1 seq=120 temp=2765 light=150
+LE 1 753039 STAT r=122 role=LEADER e=18345 tx=80,26,5,80,10,2 txB=2000,542,141,960,200,20 rx=31,26,2,13,3,1 mac=214 coll=0 radio_ms=213075 txon_ms=257 drop=2 nbr=1 stack=436 noise=0,0
+LE 1 758023 RND r=123 term=13 type=DATA reason=none slots=0 rx=0 ackmap=0x0
+LE 1 758031 RD r=123 src=1 seq=121 temp=2761 light=153
+LE 1 757726 JOIN node=0
+LE 1 758039 STAT r=123 role=LEADER e=18330 tx=81,26,5,81,10,2 txB=2025,542,141,972,200,20 rx=31,26,2,13,3,2 mac=216 coll=0 radio_ms=213187 txon_ms=259 drop=2 nbr=1 stack=436 noise=0,0
+LE 1 763171 RND r=124 term=13 type=DATA reason=none slots=1 rx=0 ackmap=0x0
+LE 1 763179 RD r=124 src=1 seq=122 temp=2757 light=154
+LE 1 763187 STAT r=124 role=LEADER e=18316 tx=82,26,5,82,10,2 txB=2050,542,141,984,200,20 rx=31,26,2,13,3,2 mac=218 coll=0 radio_ms=213444 txon_ms=261 drop=2 nbr=1 stack=436 noise=0,0
+LE 1 768062 RND r=125 term=13 type=DATA reason=none slots=1 rx=1 ackmap=0x1
+LE 1 768070 RD r=125 src=0 seq=186 temp=2694 light=187
+LE 1 768078 RD r=125 src=0 seq=187 temp=2696 light=190
+LE 1 768085 RD r=125 src=0 seq=188 temp=2694 light=192
+LE 1 768093 RD r=125 src=1 seq=123 temp=2754 light=153
+LE 1 768093 STAT r=125 role=LEADER e=18301 tx=83,26,5,83,10,2 txB=2075,542,141,996,200,20 rx=31,27,2,13,3,2 mac=220 coll=0 radio_ms=213598 txon_ms=264 drop=2 nbr=1 stack=436 noise=0,0
+LE 1 773062 RND r=126 term=13 type=DATA reason=none slots=1 rx=1 ackmap=0x1
+LE 1 773070 RD r=126 src=0 seq=189 temp=2694 light=195
+LE 1 773078 RD r=126 src=1 seq=124 temp=2752 light=153
+LE 1 773085 STAT r=126 role=LEADER e=18286 tx=84,26,5,84,10,2 txB=2100,542,141,1008,200,20 rx=31,28,2,13,3,2 mac=222 coll=0 radio_ms=213749 txon_ms=266 drop=2 nbr=1 stack=436 noise=0,0
+LE 1 778062 RND r=127 term=13 type=DATA reason=none slots=1 rx=1 ackmap=0x1
+LE 1 778070 RD r=127 src=0 seq=190 temp=2695 light=195
+LE 1 778078 RD r=127 src=1 seq=125 temp=2750 light=153
+LE 1 778085 STAT r=127 role=LEADER e=18271 tx=85,26,5,85,10,2 txB=2125,542,141,1020,200,20 rx=31,29,2,13,3,2 mac=224 coll=0 radio_ms=213901 txon_ms=269 drop=2 nbr=1 stack=436 noise=0,0
+[ERR : CSMA      ] failed to parse 0
+[ERR : CSMA      ] failed to parse 0
+[ERR : CSMA      ] failed to parse 0
+LE 1 783171 RND r=128 term=13 type=DATA reason=none slots=1 rx=1 ackmap=0x1
+LE 1 783179 RD r=128 src=0 seq=191 temp=2695 light=192
+LE 1 783187 RD r=128 src=1 seq=126 temp=2750 light=154
+LE 1 783195 STAT r=128 role=LEADER e=18256 tx=86,26,5,86,10,2 txB=2150,542,141,1032,200,20 rx=31,30,2,13,3,2 mac=226 coll=0 radio_ms=214158 txon_ms=271 drop=2 nbr=1 stack=436 noise=0,0
+LE 1 788171 RND r=129 term=13 type=DATA reason=none slots=1 rx=0 ackmap=0x0
+LE 1 788179 RD r=129 src=1 seq=127 temp=2746 light=153
+LE 1 788187 STAT r=129 role=LEADER e=18242 tx=87,26,5,87,10,2 txB=2175,542,141,1044,200,20 rx=31,30,2,13,3,2 mac=228 coll=0 radio_ms=214416 txon_ms=273 drop=2 nbr=1 stack=436 noise=0,0
+LE 1 792914 ROLE role=MEMBER term=14 leader=0 round=130
+[ERR : CSMA      ] failed to parse 0
+LE 1 792914 STEPDOWN other=0 term=14
+LE 1 792914 NEWLDR from=1 to=0 term=14 gap_ms=0 missed=0
+LE 1 793335 STAT r=130 role=MEMBER e=18232 tx=88,26,5,88,10,3 txB=2200,542,141,1056,200,30 rx=32,30,2,13,3,2 mac=231 coll=0 radio_ms=214718 txon_ms=277 drop=2 nbr=1 stack=436 noise=0,0
+LE 1 798195 STAT r=131 role=MEMBER e=18228 tx=88,27,5,88,10,3 txB=2200,561,141,1056,200,30 rx=33,30,2,13,3,2 mac=232 coll=0 radio_ms=214759 txon_ms=278 drop=2 nbr=1 stack=436 noise=-84,-81
+[ERR : CSMA      ] failed to parse 0
+[ERR : CSMA      ] failed to parse 0
+LE 1 803031 MISS n=1
+LE 1 803273 STAT r=132 role=MEMBER e=18227 tx=88,27,5,88,10,3 txB=2200,561,141,1056,200,30 rx=33,30,2,13,3,2 mac=232 coll=0 radio_ms=214907 txon_ms=278 drop=2 nbr=1 stack=436 noise=-85,-82
+[ERR : CSMA      ] failed to parse 0
+LE 1 808421 MISS n=2
+LE 1 808421 FAILDET leader=0 since_ms=10507 missed=2 k=2
+LE 1 808671 STAT r=133 role=MEMBER e=18226 tx=88,27,5,88,10,3 txB=2200,561,141,1056,200,30 rx=33,30,2,13,3,2 mac=232 coll=0 radio_ms=215446 txon_ms=278 drop=2 nbr=1 stack=436 noise=-87,-37
+[ERR : CSMA      ] failed to parse 0
+LE 1 813421 MISS n=3
+LE 1 813664 STAT r=134 role=MEMBER e=18225 tx=88,27,5,88,10,3 txB=2200,561,141,1056,200,30 rx=33,30,2,13,3,2 mac=232 coll=0 radio_ms=215987 txon_ms=278 drop=3 nbr=1 stack=436 noise=-87,-82
+LE 1 818421 MISS n=4
+LE 1 818664 STAT r=135 role=MEMBER e=18224 tx=88,27,5,88,10,3 txB=2200,561,141,1056,200,30 rx=33,30,2,13,3,2 mac=232 coll=0 radio_ms=216526 txon_ms=278 drop=4 nbr=1 stack=436 noise=-86,-81
+LE 1 823421 MISS n=5
+LE 1 823664 STAT r=136 role=MEMBER e=18223 tx=88,27,5,88,10,3 txB=2200,561,141,1056,200,30 rx=33,30,2,13,3,2 mac=232 coll=0 radio_ms=217065 txon_ms=278 drop=5 nbr=1 stack=436 noise=-86,-83
+LE 1 828421 MISS n=6
+LE 1 828664 STAT r=137 role=MEMBER e=18222 tx=88,27,5,88,10,3 txB=2200,561,141,1056,200,30 rx=33,30,2,13,3,2 mac=232 coll=0 radio_ms=217605 txon_ms=278 drop=6 nbr=1 stack=436 noise=-86,-81
+LE 1 833421 MISS n=7
+LE 1 833421 ROLE role=LISTEN term=14 leader=-1 round=138
+LE 1 837226 ROLE role=MEMBER term=15 leader=0 round=135
+[ERR : CSMA      ] failed to parse 0
+LE 1 837226 NEWLDR from=-1 to=0 term=15 gap_ms=0 missed=0
+LE 1 837789 STAT r=135 role=MEMBER e=18215 tx=88,27,6,88,10,3 txB=2200,561,180,1056,200,30 rx=34,30,2,14,3,2 mac=233 coll=0 radio_ms=222182 txon_ms=280 drop=6 nbr=1 stack=436 noise=-86,-37
+LE 1 842859 STAT r=136 role=MEMBER e=18208 tx=88,27,7,88,10,3 txB=2200,561,207,1056,200,30 rx=35,30,2,15,3,2 mac=234 coll=0 radio_ms=222529 txon_ms=281 drop=6 nbr=1 stack=436 noise=-85,-82
+LE 1 847625 RESULT new=1 term=16
+LE 1 847867 STAT r=137 role=MEMBER e=18200 tx=88,27,8,88,10,3 txB=2200,561,234,1056,200,30 rx=36,30,2,16,4,2 mac=235 coll=0 radio_ms=222817 txon_ms=283 drop=6 nbr=1 stack=436 noise=-44,-41
+LE 1 852367 ROLE role=LEADER term=16 leader=1 round=138
+LE 1 852875 RND r=138 term=16 type=DATA reason=none slots=1 rx=0 ackmap=0x0
+LE 1 852882 RD r=138 src=1 seq=138 temp=2731 light=148
+LE 1 852890 RD r=138 src=1 seq=139 temp=2732 light=147
+LE 1 852898 STAT r=138 role=LEADER e=18186 tx=89,27,8,89,10,3 txB=2225,561,234,1068,200,30 rx=36,30,2,16,4,2 mac=237 coll=0 radio_ms=223075 txon_ms=285 drop=6 nbr=1 stack=436 noise=0,0
+LE 1 857875 RND r=139 term=16 type=DATA reason=none slots=1 rx=0 ackmap=0x0
+LE 1 857882 RD r=139 src=1 seq=140 temp=2729 light=146
+LE 1 857890 STAT r=139 role=LEADER e=18170 tx=90,27,8,90,10,3 txB=2250,561,234,1080,200,30 rx=37,30,2,17,4,2 mac=239 coll=0 radio_ms=223333 txon_ms=288 drop=6 nbr=1 stack=436 noise=0,0
+[ERR : CSMA      ] failed to parse 0
+LE 1 862875 RND r=140 term=16 type=DATA reason=none slots=1 rx=0 ackmap=0x0
+LE 1 862882 RD r=140 src=1 seq=141 temp=2728 light=141
+LE 1 862632 PRUNE node=0
+LE 1 862890 STAT r=140 role=LEADER e=18155 tx=91,27,8,91,10,3 txB=2275,561,234,1092,200,30 rx=38,30,2,17,4,2 mac=241 coll=0 radio_ms=223590 txon_ms=290 drop=6 nbr=1 stack=436 noise=0,0
+LE 1 862945 ORPHAN r=140
+LE 1 862945 ROLE role=LISTEN term=16 leader=-1 round=140

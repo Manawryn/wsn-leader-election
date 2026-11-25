@@ -32,7 +32,7 @@ After a busy channel CSMA still backs off as usual.
    |           |  no beacon for BOOT_WAIT*(1+rank) -> LEADER (bootstrap election)
    |
    |  MEMBER --- RESULT names me ------------> LEADER (next period)
-   |  MEMBER --- K (+j) missed beacons, I am backup j -> LEADER (failover election)
+   |  MEMBER --- K (+j) silent rounds, I am backup j -> LEADER (failover election)
    |  LEADER --- election picked someone else -> MEMBER (waits for new leader)
    |  LEADER --- hears a better beacon (higher term) -> MEMBER (step down)
    +--- LEADER - all members pruned (orphan, probably another leader exists)
@@ -48,16 +48,19 @@ LEDs: blue = leader, green = member (toggles on every uplink), red = failed or d
 All offsets are relative to `t0`, the moment the beacon ended. On the leader
 this is the MAC sent-callback; on a member it is the receive callback. Both
 sides compute every later instant from `t0` with the same formula, so clock
-offsets between motes cancel out.
+offsets between motes cancel out. The beacon is sent twice (§9); a member that
+only hears copy c sets `t0` = receive time − c × 15 ms.
 
 ```
 t0            BEACON  (round, term, DATA/ELECT flag, slot table, backup list)
++15 ms        BEACON  copy 1, same content (time diversity, §9)
 +40 ms        slot 0  member slot[0] -> leader      DATA (unicast, ACK, 3 attempts)
 +80 ms        slot 1  member slot[1] -> leader          or REPORT (broadcast) in an
 ...                                                     ELECT round
 +40+n*40      contention slot: JOIN from nodes without a slot
 +40+(n+1)*40+30  ACKMAP: bit i = "got node i's packet"            (= tb)
-tb+40+i*40    retry slot i, only for members whose bit is 0
+tb+40+i*40    retry slot i, only for members whose bit is 0 (also members
+              that missed the beacon but heard the ackmap, §9)
 tb+40+n*40+30 RESULT (ELECT rounds only)
 ...           everybody sleeps until t0 + 5000 - 30 ms (guard)
 ```
@@ -84,10 +87,10 @@ round`. The magic byte filters out other groups' NullNet traffic in the lab.
 
 | Type | Direction | Payload | Size (B) |
 |---|---|---|---|
-| BEACON | leader → all | flags, reason, leader energy, slot table, backup list | 25 |
-| DATA | member → leader, unicast | energy, beacon RSSI, beacon PRR, 1–3 readings (seq, temp, light) | 13 + 6 per reading |
+| BEACON | leader → all | flags, copy number, reason, leader energy, slot table, backup list | 26 |
+| DATA | member → leader, unicast | energy, beacon RSSI, beacon PRR, 1–6 readings (seq, temp, light) | 13 + 6 per reading |
 | REPORT | member → all, broadcast | DATA + RSSI at which the sender hears every node | 21 + 6 per reading |
-| ACKMAP | leader → all | received bitmap, expected bitmap | 12 |
+| ACKMAP | leader → all | received bitmap, expected bitmap, ELECT flag | 13 |
 | RESULT | leader → all | new leader, new term, alive bitmap, score, backup list | 20 |
 | JOIN | node → leader | energy | 10 |
 
@@ -162,12 +165,16 @@ and retries the election (`HANDOVER fail` in the log).
 
 ## 7. Failure detection and failover
 
-* Members count consecutive missed beacons. After **K** (`LE_FAILURE_TIMEOUT_K`)
-  the leader is considered failed.
+* Members count consecutive rounds in which they heard **nothing** from the
+  leader: no beacon copy and no ackmap (§9). After **K** such rounds
+  (`LE_FAILURE_TIMEOUT_K`, default 3) the leader is considered failed.
 * No election messages are needed at that point. Every beacon carries a
   **succession list** of 3 backups. The leader recomputes it every round with
   the same scoring, from the energy values that members send in their DATA.
-  Backup j takes over after K + j missed beacons, so if backup 0 is dead too,
+  Every member still in the slot table is a candidate, also one whose last
+  packet was lost; otherwise a single lost packet just before a link outage
+  empties the list and nobody may take over.
+  Backup j takes over after K + j silent rounds, so if backup 0 is dead too,
   backup 1 follows one period later. Within one window backup j also waits
   j × 80 ms longer (`LE_BACKUP_GAP_MS`). A backup that has counted one lost
   beacon more than backup 0 then hears backup 0's beacon first and follows it,
@@ -202,21 +209,123 @@ and retries the election (`HANDOVER fail` in the log).
 ## 8. Keeping data flowing during re-election
 
 Members sample every round, even while there is no leader, because they keep
-following the predicted schedule. Each member keeps up to 3 unconfirmed
-readings (`LE_BACKLOG`) and sends all of them in its next DATA or REPORT. With
-K ≤ 2 a failover therefore loses no samples; they only arrive late. A planned
-election causes no gap, because REPORTs carry the data.
+following the predicted schedule. Each member keeps up to 6 unconfirmed
+readings (`LE_BACKLOG`) and sends all of them in its next DATA or REPORT, so
+an outage of up to 6 rounds loses no samples; they only arrive late. 6 covers
+the worst case seen on the motes: the leader prunes a silent member after
+3 rounds and gives up as an orphan, and the member takes over after K = 3
+more. A planned election causes no gap, because REPORTs carry the data.
 
-## 9. Multiple clusters
+## 9. Operating under interference
+
+A real 2.4 GHz room is noisy, and the protocol has to work in it rather than
+in a quiet lab. On our desk (laptop Wi-Fi and USB ports nearby, motes 80 cm
+apart) the first hardware runs lost 40–60 % of the beacons although the
+signal was strong (−42 to −59 dBm), on channel 26 and on channel 20 alike.
+The beacons did arrive, but with a failed CRC (`failed to parse 0` in the
+log). The noise measurement (`noise=lowest,highest` in STAT, sampled just
+before each beacon) showed why. The floor was −92 dBm on one mote and
+−84 dBm on the other, and a third of the samples hit bursts of −50 to −33 dBm
+from a nearby transmitter. With a single beacon and K = 2, this caused false
+failovers and rounds with two leaders.
+
+The protocol uses the error-control tools from the lectures:
+
+| Tool (lecture) | In our protocol |
+|---|---|
+| ARQ with cumulative ACK and selective repeat (10B) | The ackmap is the cumulative ACK of the round; `expected & ~received` is a NACK list. Every member named in it retries in its retry slot. This includes a member that missed the beacon: it keeps listening until the ackmap was due, rebuilds the slot table from the expected bitmap (slots go in node-index order) and the ELECT flag, and retries (`ALIVE ... retry=1`). Retries are bounded: one retry round. |
+| Time diversity against burst errors (10A interleaving, 10B bursty channels) | Every beacon and every RESULT is sent twice, 15 ms apart (`LE_BEACON_COPIES`, `LE_RESULT_COPIES`, `LE_BEACON_GAP_MS`). A burst that destroys one copy usually misses the other. |
+| Passive link estimation by overhearing (10B) | Failure detection counts a round as missed only if nothing at all came from the leader. |
+| A NACK needs a receiver that knows a packet was due (12) | In the TDMA frame a member knows when the beacon is due, and the leader knows who owns each slot, so missing frames are detectable on both sides. |
+
+FEC is not used. The CC2420 drops a frame with a failed CRC in hardware, so
+the software never sees the damaged bytes it would correct, and per-chunk
+checksums (10B) do not pay off for 13–26-byte frames. The clear-channel check
+(CCA, as in B-MAC, lecture 8) stays off inside TDMA slots. A busy channel
+during a node's own slot can only be interference, and waiting for it pushes
+the frame out of its slot. A noise-floor-adaptive CCA before the beacon is
+possible future work.
+
+Cost: one extra beacon per round (26 B, about 1 ms on air), so a normal
+round has 3 control messages instead of 2, and one extra RESULT (20 B) per
+election. A member that missed every beacon copy listens 70–130 ms longer
+for the ackmap. Flash +0.8 KB; RAM +48 B, plus 252 B for the 6-reading
+backlog (3.37 KB of 10 KB in all).
+
+Cooja, 5 motes, 15 min, every frame lost with probability 40 % (UDGM
+success ratio 0.6):
+
+| | Before (1 beacon, K = 2) | After (2 copies, ackmap NACK, K = 3) |
+|---|---|---|
+| Slot success | 88.6 % | 98.7 % |
+| Samples lost | 11 / 891 | 0 / 891 |
+| Rounds in which a member heard nothing (`MISS`) | 73 | 8 |
+| Missed beacons recovered via ackmap + retry | 0 | 15 |
+| Handover fallbacks | 1 | 0 |
+| Members wrongly pruned / re-JOINs | 1 / 7 | 0 / 0 |
+
+With a leader crash every 40 rounds and 20 % loss, both versions detect all 4
+failures with no false alarms; detection goes from 10.4 s (K = 2) to 15.4 s
+(K = 3), slot success from 92.2 % to 100 %, lost samples from 2 to 0. Cooja
+loses frames independently, while Wi-Fi bursts are correlated, so the second
+beacon copy helps less on hardware than here.
+
+On the motes (2 TelosB, 80 cm apart on a desk next to a laptop, channel 20,
+10 min each). The share of member noise samples that hit a burst above
+−75 dBm was 35 % in the first two runs and 42–50 % in the last two:
+
+| | Before (1 beacon, K = 2) | 2 copies, ackmap NACK, K = 3 | + backup fix | + 2 RESULT copies, backlog 6 |
+|---|---|---|---|---|
+| Slot success | 46.8 % | 75.0 % | 82.6 % | 85.6 % |
+| Delivery | 88.3 % | 95.0 % | 98.9 % | 100 % |
+| False failovers | 5 | 0 | 0 | 0 |
+| Rounds with two leaders | 15 | 0 | 0 | 0 |
+| Orphan leaders | 17 | 3 | 1 | 0 |
+| Rounds without a leader | many | 4 | 2 | 0 |
+| Failed handovers (`HANDOVER fail`) | 5 | 0 | 3 | 0 |
+| Rounds in which a member heard nothing (`MISS`) | 62 | 24 | 13 | 7 |
+| Missed beacons recovered via ackmap + retry | 0 | 18 | 13 | 12 |
+| Radio on per round, leader / member (median) | 256 / 84 ms | 256 / 84.5 ms | 153 / 57 ms | 153 / 48 ms |
+
+All 13 samples lost in the second run came from two outages of about
+3 rounds in both directions. Each time the last beacon before the outage
+named no backup, because the leader built the list only from members it had
+heard in that round. The member detected the failure but could not take over,
+the leader gave up as an orphan, and the pair took 25–40 s to re-form, longer
+than the 3-reading backlog. The list now keeps every member that is still in
+the slot table. In a Cooja run with the same loss pattern (one round lost, one
+good, 25 s of total loss) this turned 10 lost samples and a 26 s re-formation
+into a takeover on the old schedule with no lost samples.
+
+The third run had one such outage (3 rounds in which the leader got nothing
+from the member). The member took over after K = 3 rounds on the old
+schedule, the old leader joined it 70 ms later, and there were 2 rounds
+without a leader. The 3 lost samples came from this outage: about 5 rounds of
+readings had to wait, more than the backlog of 3 at the time, so the backlog is
+now 6 (§8). In the same run the winner of the start-up election missed the
+single RESULT three rounds in a row, so the old leader kept the role and
+repeated the election (`HANDOVER fail`). No data was lost, but the RESULT is
+now sent twice as well. In Cooja (5 motes, 30 min, 30 % broadcast loss) the
+two changes together took handover fallbacks from 6 to 1 and lost samples
+from 11 to 0; the RESULT copy alone gave 2 lost samples.
+
+The fourth run, with both changes, delivered every sample (247 of 247). All
+5 rotations handed over at the first attempt, and once a member delivered
+4 buffered readings in one packet, which a backlog of 3 would have cut. It
+had no long outage, so the takeover path was not exercised; the third run
+shows it.
+
+## 10. Multiple clusters
 
 `LE_NODE_CLUSTERS` assigns each node to a cluster (`DEFINES=LE_TWO_CLUSTERS=1`
-gives {0,1,2} and {3,4}). Every cluster runs the whole protocol independently:
+gives {0,1,2} and {3,4}). Nodes missing from the end of the table (for
+example nodes 6–8 with the default 5-entry table) are in cluster 0. Every cluster runs the whole protocol independently:
 its own bootstrap coordinator, leader, rotation and backups. Packets of other
 clusters are dropped by the cluster id in the header. By default both clusters
 share a channel and CSMA separates their frames. With
 `LE_CLUSTER_OWN_CHANNEL=1` each cluster uses its own channel.
 
-## 10. Energy model
+## 11. Energy model
 
 Energy is simulated (`le-energy.c`), so that "low energy" and battery death
 happen within an experiment:
@@ -233,7 +342,7 @@ The real radio-on time is measured with Energest and logged in every `STAT`
 line (`radio_ms`), so the simulated model can be compared with real duty
 cycles.
 
-## 11. How each metric is measured
+## 12. How each metric is measured
 
 `scripts/analyze.py` computes everything from the serial logs. Durations always
 use the clock of one mote; events of different motes are matched by round and
@@ -249,13 +358,13 @@ term, which travel in the beacons.
 | Disruption | `RD` lines at the leader (one per delivered reading, with the sample sequence number): lost samples, samples delivered late, rounds without a leader. |
 | Energy balance | Energy left, rounds as leader per node, Jain fairness, round of the first death. |
 
-## 12. Results in Cooja (simulation, before hardware)
+## 13. Results in Cooja (simulation, before hardware)
 
 Results from Cooja simulations: 5 sky motes in UDGM placed 5–35 m apart,
 default parameters unless noted. They are expected values to compare with the
 hardware measurements, not hardware results.
 
-**Scenario `sim/leader-election.csc`** (10 min, the leader crashes at 60 s and comes back 40 s later; at 150 s the leader's energy is drained):
+**Scenario `sim/leader-election.csc`** (10 min, the leader crashes at 60 s and comes back 40 s later; at 150 s the leader's energy is drained). Measured before the interference changes of §9, i.e. with one beacon per round and K = 2; with them a normal round has one more beacon, detection takes one period longer (K = 3) and the firmware is 0.7 KB larger:
 
 | Metric | Result |
 |---|---|
@@ -283,27 +392,33 @@ battery stays at 250–400 units (rounds 50–200), against 450–880 with
 low-energy relinquish only and up to 1340 with a fixed leader. The price is
 more elections.
 
-**Failure-detection timeout K** (30 min each, the leader crashes every 30 rounds for 40 s, 10 % broadcast loss):
+**Failure-detection timeout K** (30 min each, the leader crashes every 30 rounds for 40 s, 10 % broadcast loss), with the firmware of §9 (two beacon copies, ackmap NACK, "missed" = nothing heard from the leader):
 
 | K | Failovers | False failovers | Detection | Members without leader | Samples lost | Rounds with two leaders |
 |---|---|---|---|---|---|---|
-| 1 | 13 | 2 | 5.8 s | 5.9 s | 3 / 1307 | 3 |
-| 2 | 12 | 0 | 10.3 s | 10.9 s | 5 / 1331 | 0 |
-| 3 | 13 | 0 | 15.3 s | 16.7 s | 11 / 1376 | 0 |
-| 4 | 11 | 0 | 20.3 s | 20.9 s | 46 / 1405 | 0 |
+| 1 | 11 | 0 | 5.8 s | 5.3 s | 0 / 1193 | 0 |
+| 2 | 11 | 0 | 10.3 s | 10.3 s | 1 / 1192 | 0 |
+| 3 | 12 | 0 | 15.3 s | 15.3 s | 0 / 1242 | 0 |
+| 4 | 10 | 0 | 20.3 s | 20.3 s | 34 / 1269 | 0 |
 
-Detection time grows linearly (K · 5 s + 0.35 s). K = 1 is the fastest but
-turns lost broadcasts into false takeovers, and once briefly gave two leaders;
-the step-down and orphan rules resolved it within 3 rounds. With K = 4 the
-outage (4 rounds) is longer than the backlog (3 readings), so samples are
-lost. **K = 2 is the best compromise** for a 5 s period, and the backlog
-should be at least K.
+Detection time grows linearly (K · 5 s + 0.3 s). With the old firmware (one
+beacon, missed beacon = missed round) the same runs gave 2 false failovers and
+3 rounds with two leaders at K = 1, and 3, 5, 11 and 46 lost samples for
+K = 1–4. With K = 4 the outage (4 rounds) is longer than the backlog
+(3 readings in these runs), so samples are lost: the backlog should be at
+least K. It is now 6 (§8).
+
+In Cooja even K = 1 now has no false alarms, but Cooja loses frames
+independently. On the motes, losses came in bursts of 2–3 rounds and K = 2
+gave false failovers. **K = 3 is the default**: it still fits the backlog, and
+costs 5 s of detection time over K = 2. The hardware runs should repeat this
+table to confirm the choice.
 
 **Two clusters** (`LE_TWO_CLUSTERS=1`, 10 min): both clusters elect and rotate
 their own leader on the shared channel; 100 % delivery in both, no
 interference.
 
-## 13. Answer to the main question
+## 14. Answer to the main question
 
 *How can a WSN maintain coordination when the leader fails or becomes energy
 constrained, while keeping election overhead low?*
@@ -314,19 +429,23 @@ constrained, while keeping election overhead low?*
 * **Compute the next leaders in advance.** The leader keeps a ranked backup
   list up to date from data it already receives, and puts it in every beacon.
   A failover then needs no election messages: backup 0 just starts beaconing
-  after K missed beacons. The cost is a few bytes per beacon.
+  after K silent rounds. The cost is a few bytes per beacon.
 * **Piggyback the election on normal traffic.** A planned election replaces
   the DATA of one round with REPORTs, which carry the readings, and adds only
   an ackmap and a RESULT. That is about 4–5 extra messages per election, and
   no data round is lost.
 * **Trade detection speed against false alarms with K.** Recovery time grows
   as about K · period. A small K reacts fast but turns lost beacons into
-  unnecessary takeovers. Confirming the failure on a second message (the
-  ackmap) makes small K usable on lossy links.
+  unnecessary takeovers.
+* **Expect interference and recover locally.** Sending the beacon twice, using
+  the ackmap as a NACK list with one retry round, and declaring a failure only
+  after rounds with nothing at all from the leader keep coordination on a
+  noisy channel. In normal operation this costs one extra 26-byte beacon per
+  round (§9).
 * **Buffer at the members.** A small backlog of unconfirmed readings turns the
   leaderless gap into delay instead of loss.
 
-## 14. Limitations
+## 15. Limitations
 
 * The energy model is simulated. Energest gives the real radio-on time but not
   the remaining battery charge.
@@ -337,6 +456,9 @@ constrained, while keeping election overhead low?*
   cannot be used: with NullNet it is built from the last two bytes, the fixed
   vendor prefix, and is 4608 on every mote. If two motes show the same ID,
   use `DEFINES=LE_FORCE_INDEX=<i>`.
+* Cooja's loss models (`loss <pct>` and the UDGM success ratio) lose frames
+  independently. Real interference is bursty, so the gain from the second
+  beacon copy must be measured on the motes.
 * The simulated packet loss (`loss <pct>`) applies to broadcast frames only,
   because unicast frames have already been ACKed by the radio when the
   software sees them. For loss on unicast frames, use distance or a lower

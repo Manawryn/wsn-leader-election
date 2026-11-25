@@ -13,6 +13,7 @@ typedef struct {
   uint32_t tx_bytes[LE_MSG_NUM];/* application payload bytes sent */
   uint16_t rx[LE_MSG_NUM];      /* messages received (accepted) */
   uint32_t mac_tx;              /* MAC transmission attempts (incl. retries) */
+  uint16_t mac_coll;            /* frames dropped: channel busy (CCA) */
   uint16_t rx_dropped;          /* dropped by simulated packet loss */
 } le_stats_t;
 
