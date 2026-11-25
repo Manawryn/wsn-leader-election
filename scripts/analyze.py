@@ -50,17 +50,25 @@ def parse(paths):
     events = []
     for p in paths:
         with open(p, errors='replace') as f:
-            for n, line in enumerate(f):
-                m = LINE.search(line)
-                if not m:
-                    continue
-                kv = {k: num(v) for k, v in KV.findall(m.group(4))}
-                kv['_node'] = int(m.group(1))
-                kv['_ms'] = int(m.group(2))
-                kv['_ev'] = m.group(3)
-                kv['_raw'] = m.group(4)
-                kv['_order'] = (p, n)
-                events.append(kv)
+            lines = f.readlines()
+        # lines before the first BOOT were printed before the reset: skip them
+        start = 0
+        for i, line in enumerate(lines):
+            m = LINE.search(line)
+            if m and m.group(3) == 'BOOT':
+                start = i
+                break
+        for n, line in enumerate(lines[start:], start):
+            m = LINE.search(line)
+            if not m:
+                continue
+            kv = {k: num(v) for k, v in KV.findall(m.group(4))}
+            kv['_node'] = int(m.group(1))
+            kv['_ms'] = int(m.group(2))
+            kv['_ev'] = m.group(3)
+            kv['_raw'] = m.group(4)
+            kv['_order'] = (p, n)
+            events.append(kv)
     return events
 
 

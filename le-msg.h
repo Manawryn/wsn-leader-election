@@ -52,6 +52,8 @@ typedef struct __attribute__((packed)) {
 typedef struct __attribute__((packed)) {
   le_hdr_t h;
   uint8_t flags;
+  uint8_t copy;                 /* 0..LE_BEACON_COPIES-1; copy c is sent
+                                 * c * LE_BEACON_GAP_MS after copy 0 */
   uint8_t reason;               /* le_reason_t when LE_BF_ELECT */
   uint16_t energy;              /* leader's remaining energy */
   uint8_t n_slots;
@@ -87,10 +89,16 @@ typedef struct __attribute__((packed)) {
   le_reading_t r[LE_BACKLOG];
 } le_report_t;
 
+/* ACKMAP: cumulative ACK of the round. expected & ~received works as a NACK
+ * list: those nodes retry in the retry slots. It also carries enough of the
+ * beacon (slot owners, election flag) for a member that missed the beacon to
+ * use its retry slot. Slots are given in increasing node index, so a node's
+ * slot is the number of expected bits below its own. */
 typedef struct __attribute__((packed)) {
   le_hdr_t h;
   uint16_t received;            /* bit i: packet of node i received */
   uint16_t expected;            /* bit i: node i had a slot */
+  uint8_t flags;                /* LE_BF_ELECT, as in the beacon */
 } le_ackmap_t;
 
 typedef struct __attribute__((packed)) {
