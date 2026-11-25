@@ -64,6 +64,24 @@
 #define LE_TX_POWER_DBM         0
 #endif
 
+/* Clear-channel assessment threshold in dBm: the radio only transmits when
+ * the channel is quieter than this. Contiki's CC2420 default is -90 dBm
+ * (CC2420_CONF_CCA_THRESH -45 is a register value, plus the RSSI offset of
+ * -45 dB). That is below the background noise in many rooms (our dorm scan:
+ * -78 to -87 dBm), so the radio thinks the channel is always busy and hardly
+ * ever sends. -75 dBm is the 802.15.4 energy-detection level. */
+#ifndef LE_CCA_THRESH_DBM
+#define LE_CCA_THRESH_DBM       (-75)
+#endif
+/* 1: check the channel (CCA) before every frame, as plain CSMA does.
+ * 0: only before JOIN, the one frame sent in a shared contention slot. All
+ * other frames have their own TDMA slot, so a busy channel can only be
+ * noise, and waiting for it to clear just drops the frame. On our motes one
+ * of them found the channel busy for ~1/3 of its frames even at -75 dBm. */
+#ifndef LE_SLOT_CCA
+#define LE_SLOT_CCA             0
+#endif
+
 /*===========================================================================*/
 /* Frame timing (beacon-synchronised TDMA)                                   */
 /*===========================================================================*/

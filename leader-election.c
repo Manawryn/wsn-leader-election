@@ -180,6 +180,12 @@ static void m_round_end(void *ptr);
 static void l_send_beacon(void);
 static void l_round_end(void *ptr);
 static void enter_listen(uint32_t wait_ms);
+/* Random extra listening time (0..2 periods, 10 ms steps) for every restart
+ * of the listening phase except the first one at boot. Otherwise two nodes
+ * that started their own networks at the same moment repeat the same cycle
+ * (lead 3 rounds, give up, listen) in step forever and never hear each
+ * other. */
+#define LISTEN_JITTER_MS() ((uint32_t)(random_rand() % (2 * (LE_PERIOD_MS / 10))) * 10)
 static void fail_start(uint16_t seconds);
 static void accept_beacon(const le_beacon_t *b);
 
@@ -204,12 +210,20 @@ radio_off(void)
   NETSTACK_RADIO.off();
 }
 
+/* The TelosB's blue LED is called YELLOW in Contiki's (legacy) LED API;
+ * LEDS_BLUE does not exist there and would light nothing. */
+#ifdef LEDS_CONF_BLUE
+#define LED_LEADER LEDS_BLUE
+#else
+#define LED_LEADER LEDS_YELLOW
+#endif
+
 static void
 set_leds(void)
 {
   leds_off(LEDS_ALL);
   switch(s.state) {
-  case ST_LEADER: leds_on(LEDS_BLUE); break;
+  case ST_LEADER: leds_on(LED_LEADER); break;
   case ST_MEMBER: leds_on(LEDS_GREEN); break;
   case ST_FAILED: case ST_DEAD: leds_on(LEDS_RED); break;
   default: break;
@@ -297,6 +311,9 @@ static void
 mac_sent(void *ptr, int status, int num_tx)
 {
   le_stats.mac_tx += num_tx;
+  if(status == MAC_TX_COLLISION) {
+    le_stats.mac_coll++;   /* radio found the channel busy and gave up */
+  }
   if(s.state == ST_FAILED || s.state == ST_DEAD || s.state != s.tx_state) {
     return;   /* crashed or changed role while the frame was queued */
   }
@@ -319,6 +336,11 @@ send_msg(uint16_t len, uint8_t dest, uint8_t attempts, tx_done_t done)
   }
   packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &linkaddr_node_addr);
   packetbuf_set_attr(PACKETBUF_ATTR_MAX_MAC_TRANSMISSIONS, attempts);
+  /* Clear-channel check only where nodes contend (JOIN), unless
+   * LE_SLOT_CCA: every other frame owns its TDMA slot. */
+  NETSTACK_RADIO.set_value(RADIO_PARAM_TX_MODE,
+                           (LE_SLOT_CCA || h->type == LE_MSG_JOIN) ?
+                           RADIO_TX_MODE_SEND_ON_CCA : 0);
   le_stats_tx(h->type, len);
   le_energy_use(LE_E_TX);
   s.tx_state = s.state;
@@ -410,6 +432,10 @@ print_events(void)
   s.n_ev = 0;
 }
 
+/* diagnostic: background noise just before the beacon is due (channel idle),
+ * min/max since the last STAT line */
+static int8_t noise_min = 127, noise_max = -128;
+
 static void
 print_stat(void)
 {
@@ -418,7 +444,7 @@ print_stat(void)
   }
   LOG_PREFIX();
   printf("STAT r=%u role=%s e=%u tx=%u,%u,%u,%u,%u,%u txB=%lu,%lu,%lu,%lu,%lu,%lu "
-         "rx=%u,%u,%u,%u,%u,%u mac=%lu radio_ms=%lu txon_ms=%lu drop=%u nbr=%u stack=%ld\n",
+         "rx=%u,%u,%u,%u,%u,%u mac=%lu coll=%u radio_ms=%lu txon_ms=%lu drop=%u nbr=%u stack=%ld noise=%d,%d\n",
          s.round, state_name[s.state], le_energy(),
          le_stats.tx[1], le_stats.tx[2], le_stats.tx[3],
          le_stats.tx[4], le_stats.tx[5], le_stats.tx[6],
@@ -427,10 +453,13 @@ print_stat(void)
          (unsigned long)le_stats.tx_bytes[5], (unsigned long)le_stats.tx_bytes[6],
          le_stats.rx[1], le_stats.rx[2], le_stats.rx[3],
          le_stats.rx[4], le_stats.rx[5], le_stats.rx[6],
-         (unsigned long)le_stats.mac_tx,
+         (unsigned long)le_stats.mac_tx, le_stats.mac_coll,
          (unsigned long)(le_radio_listen_ms() + le_radio_tx_ms()),
          (unsigned long)le_radio_tx_ms(), s.dropped, le_link_neighbors(),
-         le_stack_peak());
+         le_stack_peak(),
+         noise_min == 127 ? 0 : noise_min, noise_max == -128 ? 0 : noise_max);
+  noise_min = 127;
+  noise_max = -128;
 }
 
 static void
@@ -707,10 +736,23 @@ m_beacon_timeout(void *ptr)
   if(s.missed > LE_FAILURE_TIMEOUT_K + LE_SUCC_LEN * LE_BACKUP_STAGGER + 1) {
     /* nobody took over: start from scratch */
     print_events();
-    enter_listen((uint32_t)LE_BOOT_WAIT_MS * (1 + s.cluster_rank));
+    enter_listen((uint32_t)LE_BOOT_WAIT_MS * (1 + s.cluster_rank) + LISTEN_JITTER_MS());
     return;
   }
   m_round_end(NULL);
+}
+
+static void
+sample_noise(void)
+{
+  uint8_t i;
+  radio_value_t v;
+  for(i = 0; i < 8; i++) {
+    if(NETSTACK_RADIO.get_value(RADIO_PARAM_RSSI, &v) == RADIO_RESULT_OK && v != 0) {
+      if(v < noise_min) noise_min = v;
+      if(v > noise_max) noise_max = v;
+    }
+  }
 }
 
 static void
@@ -718,6 +760,7 @@ m_wake_beacon(void *ptr)
 {
   int8_t rank = succ_rank(s.me);
   radio_on();
+  sample_noise();
   s.acked = 0;
   if(s.handover_wait) {
     at(s.t0 + MS2T(LE_PERIOD_MS + LE_HANDOVER_WAIT_MS), m_handover_fallback);
@@ -1047,7 +1090,7 @@ l_round_end(void *ptr)
      * frames do not overlap with ours. Listen continuously to find it. */
     LOG_PREFIX();
     printf("ORPHAN r=%u\n", s.round);
-    enter_listen((uint32_t)LE_BOOT_WAIT_MS * (1 + s.cluster_size));
+    enter_listen((uint32_t)LE_BOOT_WAIT_MS * (1 + s.cluster_size) + LISTEN_JITTER_MS());
     return;
   }
 
@@ -1367,7 +1410,7 @@ fail_end(void *ptr)
   LOG_PREFIX();
   printf("RECOVER\n");
   s.n_backlog = 0;
-  enter_listen((uint32_t)LE_BOOT_WAIT_MS * (1 + s.cluster_size));
+  enter_listen((uint32_t)LE_BOOT_WAIT_MS * (1 + s.cluster_size) + LISTEN_JITTER_MS());
 }
 
 static void
@@ -1426,6 +1469,10 @@ PROCESS_THREAD(le_process, ev, data)
 
   PROCESS_BEGIN();
 
+  /* The sky platform seeds the generator with a DS2411 byte that is the same
+   * on every TelosB, so all motes would draw identical "random" numbers. */
+  random_init(serial_id());
+
   memset(&s, 0, sizeof(s));
   s.me = LE_NONE;
 #ifdef LE_FORCE_INDEX
@@ -1468,6 +1515,7 @@ PROCESS_THREAD(le_process, ev, data)
   NETSTACK_RADIO.set_value(RADIO_PARAM_CHANNEL,
                            LE_RF_CHANNEL - (LE_CLUSTER_OWN_CHANNEL ? s.cluster : 0));
   NETSTACK_RADIO.set_value(RADIO_PARAM_TXPOWER, LE_TX_POWER_DBM);
+  NETSTACK_RADIO.set_value(RADIO_PARAM_CCA_THRESHOLD, LE_CCA_THRESH_DBM);
   nullnet_set_input_callback(input_cb);
 #ifdef CONTIKI_TARGET_SKY
   SENSORS_ACTIVATE(button_sensor);
@@ -1478,6 +1526,11 @@ PROCESS_THREAD(le_process, ev, data)
          s.cluster_rank, N_NODES, le_energy());
   for(i = 0; i < LINKADDR_SIZE; i++) {
     printf("%02x", linkaddr_node_addr.u8[i]);
+  }
+  {
+    radio_value_t cca = 0;
+    NETSTACK_RADIO.get_value(RADIO_PARAM_CCA_THRESHOLD, &cca);
+    printf(" cca_dbm=%d", (int)cca);
   }
   printf(" ram_static=%u state_bytes=%u k=%u period_ms=%u rot=%u\n", le_static_ram(),
          (unsigned)(sizeof(s) + sizeof(node_addr) + sizeof(txbuf)),
